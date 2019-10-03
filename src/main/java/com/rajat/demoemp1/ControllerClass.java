@@ -17,7 +17,7 @@ public class ControllerClass {
     @Autowired
     DesignationRepo degRepo;
 
-    @RequestMapping("/employee")
+    @RequestMapping("/rest/employee")
     public ResponseEntity<Object> allEmployee()
     {
         //return empRepo.findAllByOrderByDesignation_levelAscEmpNameAsc();
@@ -25,15 +25,15 @@ public class ControllerClass {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @GetMapping("/employee/{aid}")
-    public ResponseEntity findParticular(@PathVariable("aid") int aid)
+    @GetMapping("/rest/employee/{empId}")
+    public ResponseEntity findParticular(@PathVariable("empId") int empId)
     {
         Employee manager=null;
         List<Employee> colleagues=null;
         Map<String,Object> map=new LinkedHashMap<>();
         HttpStatus status = null;
         String res ="";
-        Employee emp=empRepo.findByEmpId(aid);
+        Employee emp=empRepo.findByEmpId(empId);
         if(emp==null)
         {
             res = "Employee not found";
@@ -63,7 +63,7 @@ public class ControllerClass {
     }
 
 
-    @PostMapping(path = "/employee")
+    @PostMapping(path = "/rest/employee")
     public ResponseEntity<String> saveData(@RequestBody PostRequest employee)
     {
         HttpStatus status=null;
@@ -96,7 +96,7 @@ public class ControllerClass {
         return new ResponseEntity<>(res,status);
     }
 
-    @PutMapping("/employee/{empId}")
+    @PutMapping("/rest/employee/{empId}")
     public ResponseEntity putData(@PathVariable("empId") int empId, @RequestBody PostRequest emp)
     {
         String result="";
@@ -211,5 +211,46 @@ public class ControllerClass {
         }
         return new ResponseEntity(result,status);
         }
+
+    @DeleteMapping("/rest/employee/{eid}")
+    public ResponseEntity deleteEmployee(@PathVariable("eid") int eid)
+    {
+        Employee emp=empRepo.findByEmpId(eid);
+        if(emp!=null)
+        {
+            if(emp.getDesgName().equals("DIRECTOR"))
+            {
+                List<Employee> list=empRepo.findAllByParentId(emp.getEmpId());
+                if(list.size()>0)
+                {
+                    // Not able to delete
+                    return new ResponseEntity("Can not delete Director",HttpStatus.BAD_REQUEST);
+                }
+                else
+                {
+                    //Able to delete
+                    empRepo.delete(emp);
+                    return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
+                }
+            }
+            else
+            {
+                int parentId=emp.getParentId();
+                List<Employee> childs=empRepo.findAllByParentId(emp.getEmpId());
+                for(Employee employee:childs)
+                {
+                    employee.setParentId(parentId);
+                    empRepo.save(employee);
+                }
+                empRepo.delete(emp);
+                return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
+            }
+        }
+        else
+        {
+            return new ResponseEntity("Bad Request",HttpStatus.BAD_REQUEST);
+        }
     }
+
+}
 

@@ -28,7 +28,7 @@ public class Employee {
     String desgName;
 
     @OneToOne(cascade=CascadeType.ALL)
-    @JoinColumn()
+    @JoinColumn
     @JsonIgnore
     Designation designation;
 
