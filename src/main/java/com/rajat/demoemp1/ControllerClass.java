@@ -1,5 +1,7 @@
 package com.rajat.demoemp1;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,8 @@ public class ControllerClass {
     @Autowired
     DesignationRepo degRepo;
 
-    @RequestMapping("/rest/employee")
+    @GetMapping("/rest/employees")
+    @ApiOperation(value="Finds all the employees sorted according to their designation")
     public ResponseEntity<Object> allEmployee()
     {
         //return empRepo.findAllByOrderByDesignation_levelAscEmpNameAsc();
@@ -25,8 +28,9 @@ public class ControllerClass {
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
-    @GetMapping("/rest/employee/{empId}")
-    public ResponseEntity findParticular(@PathVariable("empId") int empId)
+    @GetMapping("/rest/employees/{empId}")
+    @ApiOperation(value="Finds an employee by employee id otherwise suitable response")
+    public ResponseEntity findParticular(@ApiParam(value = "Employee unique id for the details you need to retrieve",required = true) @PathVariable("empId") int empId)
     {
         Employee manager=null;
         List<Employee> colleagues=null;
@@ -63,7 +67,8 @@ public class ControllerClass {
     }
 
 
-    @PostMapping(path = "/rest/employee")
+    @PostMapping(path = "/rest/employees")
+    @ApiOperation(value="Adds a new employee in the organisation")
     public ResponseEntity<String> saveData(@RequestBody PostRequest employee)
     {
         HttpStatus status=null;
@@ -96,8 +101,9 @@ public class ControllerClass {
         return new ResponseEntity<>(res,status);
     }
 
-    @PutMapping("/rest/employee/{empId}")
-    public ResponseEntity putData(@PathVariable("empId") int empId, @RequestBody PostRequest emp)
+    @PutMapping("/rest/employees/{empId}")
+    @ApiOperation(value="Updates a particular employee by Id ")
+    public ResponseEntity putData(@ApiParam(value = "Employee unique id whose details you need to update",required = true)@PathVariable("empId") int empId, @RequestBody PostRequest emp)
     {
         String result="";
         HttpStatus status=null;
@@ -212,10 +218,11 @@ public class ControllerClass {
         return new ResponseEntity(result,status);
         }
 
-    @DeleteMapping("/rest/employee/{eid}")
-    public ResponseEntity deleteEmployee(@PathVariable("eid") int eid)
+    @DeleteMapping("/rest/employees/{empId}")
+    @ApiOperation(value="Delete an employee by id otherwise suitable response")
+    public ResponseEntity deleteEmployee(@ApiParam(value = "Employee unique id whom you want to delete",required = true)@PathVariable("empId") int empId)
     {
-        Employee emp=empRepo.findByEmpId(eid);
+        Employee emp=empRepo.findByEmpId(empId);
         if(emp!=null)
         {
             if(emp.getDesgName().equals("DIRECTOR"))

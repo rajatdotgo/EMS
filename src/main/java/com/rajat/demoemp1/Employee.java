@@ -1,9 +1,11 @@
 package com.rajat.demoemp1;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
 
+@ApiModel(description = "Details about the employees")
 @Entity
 public class Employee {
     Employee()

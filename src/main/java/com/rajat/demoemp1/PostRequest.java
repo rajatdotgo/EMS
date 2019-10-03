@@ -1,5 +1,9 @@
 package com.rajat.demoemp1;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+
 public class PostRequest {
 
     int empId=-1;
