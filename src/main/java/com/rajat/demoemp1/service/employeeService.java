@@ -71,10 +71,45 @@ public class employeeService {
 
     }
 
-public ResponseEntity deleteEmployee(int id){
-    if(!empValidate.empExist(id))
-    {
-        return new ResponseEntity("No record found",HttpStatus.NOT_FOUND);
+    public ResponseEntity deleteEmployee(int id){
+        if(!empValidate.empExist(id))
+        {
+            return new ResponseEntity("No record found",HttpStatus.NOT_FOUND);
+        }
+        else
+        {
+            Employee emp=empRepo.findByEmpId(id);
+
+
+                if(emp.getDesgName().equals("DIRECTOR"))
+                {
+                    List<Employee> list=empRepo.findAllByParentId(emp.getEmpId());
+                    if(list.size()>0)
+                    {
+                        // Not able to delete
+                        return new ResponseEntity("Can not delete Director",HttpStatus.BAD_REQUEST);
+                    }
+                    else
+                    {
+                        //Able to delete
+                        empRepo.delete(emp);
+                        return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
+                    }
+                }
+                else
+                {
+                    int parentId=emp.getParentId();
+                    List<Employee> childs=empRepo.findAllByParentId(emp.getEmpId());
+                    for(Employee employee:childs)
+                    {
+                        employee.setParentId(parentId);
+                        empRepo.save(employee);
+                    }
+                    empRepo.delete(emp);
+                    return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
+                }
+
+        }
+
     }
-}
 }

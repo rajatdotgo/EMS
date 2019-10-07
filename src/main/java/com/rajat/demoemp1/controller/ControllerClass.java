@@ -258,41 +258,9 @@ public class ControllerClass {
     @ApiOperation(value="Delete an employee by id otherwise suitable response")
     public ResponseEntity deleteEmployee(@ApiParam(value = "Employee unique id whom you want to delete",required = true)@PathVariable("empId") int empId)
     {
-        Employee emp=empRepo.findByEmpId(empId);
-        if(emp!=null)
-        {
-            if(emp.getDesgName().equals("DIRECTOR"))
-            {
-                List<Employee> list=empRepo.findAllByParentId(emp.getEmpId());
-                if(list.size()>0)
-                {
-                    // Not able to delete
-                    return new ResponseEntity("Can not delete Director",HttpStatus.BAD_REQUEST);
-                }
-                else
-                {
-                    //Able to delete
-                    empRepo.delete(emp);
-                    return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
-                }
-            }
-            else
-            {
-                int parentId=emp.getParentId();
-                List<Employee> childs=empRepo.findAllByParentId(emp.getEmpId());
-                for(Employee employee:childs)
-                {
-                    employee.setParentId(parentId);
-                    empRepo.save(employee);
-                }
-                empRepo.delete(emp);
-                return new ResponseEntity("Deleted Successfully",HttpStatus.OK);
-            }
-        }
-        else
-        {
-            return new ResponseEntity("Bad Request",HttpStatus.NOT_FOUND);
-        }
+       return  empService.deleteEmployee(empId);
+
+      
     }
 
 }
