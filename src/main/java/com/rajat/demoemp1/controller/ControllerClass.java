@@ -1,5 +1,11 @@
-package com.rajat.demoemp1;
+package com.rajat.demoemp1.controller;
 
+import com.rajat.demoemp1.repository.DesignationRepo;
+import com.rajat.demoemp1.repository.EmployeeRepo;
+import com.rajat.demoemp1.model.Designation;
+import com.rajat.demoemp1.model.Employee;
+import com.rajat.demoemp1.model.PostRequest;
+import com.rajat.demoemp1.service.employeeService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,52 +24,22 @@ public class ControllerClass {
     EmployeeRepo empRepo;
     @Autowired
     DesignationRepo degRepo;
+    @Autowired
+    employeeService empService;
 
     @GetMapping("/rest/employees")
     @ApiOperation(value="Finds all the employees sorted according to their designation")
-    public ResponseEntity<Object> allEmployee()
+    public ResponseEntity allEmployees()
     {
-        //return empRepo.findAllByOrderByDesignation_levelAscEmpNameAsc();
-        Object list=empRepo.findAllByOrderByDesignation_levelAscEmpNameAsc();
-        return new ResponseEntity<>(list,HttpStatus.OK);
+       return empService.getAll();
     }
 
     @GetMapping("/rest/employees/{empId}")
     @ApiOperation(value="Finds an employee by employee id otherwise suitable response")
     public ResponseEntity findParticular(@ApiParam(value = "Employee unique id for the details you need to retrieve",required = true) @PathVariable("empId") int empId)
     {
-        Employee manager=null;
-        List<Employee> colleagues=null;
-        Map<String,Object> map=new LinkedHashMap<>();
-        HttpStatus status = null;
-        String res ="";
-        Employee emp=empRepo.findByEmpId(empId);
-        if(emp==null)
-        {
-            res = "Employee not found";
-            status= HttpStatus.BAD_REQUEST;
-            return new ResponseEntity(res,status);
-        }
-        else {
-            map.put("Employee", emp);
+        return empService.findParticular(empId);
 
-            if (emp.getParentId() != null) {
-                manager = empRepo.findByEmpId(emp.getParentId());
-                map.put("Manager", manager);
-
-                colleagues = empRepo.findAllByParentIdAndEmpIdIsNot(emp.getParentId(), emp.getEmpId());
-                map.put("Colleagues", colleagues);
-            }
-
-            List<Employee> reporting = empRepo.findAllByParentIdAndEmpIdIsNot(emp.getEmpId(), emp.getEmpId());
-            if (reporting.size() != 0)
-                map.put("Reporting Too", reporting);
-
-            //res = "Here you go";
-            status= HttpStatus.OK;
-
-        }
-        return new ResponseEntity<>(map,status);
     }
 
 
@@ -71,34 +47,61 @@ public class ControllerClass {
     @ApiOperation(value="Adds a new employee in the organisation")
     public ResponseEntity<String> saveData(@RequestBody PostRequest employee)
     {
-        HttpStatus status=null;
-        String res="";
 
         String empName=employee.getEmpName();
-        String desg=employee.getEmpDesg();
-        int parent=employee.getParentId();
-
-
+        String desg=employee.getEmpDesg().toUpperCase();
+        Integer parent=employee.getParentId();
 
         Designation designation=degRepo.findByDesgName(desg);
         float childLevel=designation.getLevel();
-
-        Employee employee1=empRepo.findByEmpId(parent);
-        float parLevel=employee1.designation.level;
-
-        if(parLevel<childLevel)
+        if(empRepo.findByEmpId(parent)==null)
         {
-            Employee emp=new Employee(designation,parent,empName);
-            empRepo.save(emp);
-            status= HttpStatus.OK;
-            res="Data Saved";
+
+            return new ResponseEntity<>( "No supervisor found of given id", HttpStatus.BAD_REQUEST);
+        }
+        if(!(parent==null&& empRepo.findByEmpId(parent)==null))
+        {
+            Employee employee1=empRepo.findByEmpId(parent);
+            float parLevel=employee1.designation.level;
+            if (parLevel < childLevel) {
+                Employee emp = new Employee(designation, parent, empName);
+                empRepo.save(emp);
+
+                return new ResponseEntity<>( "Data Saved", HttpStatus.OK);
+            } else {
+
+                return new ResponseEntity<>( desg+" can not report to "+empRepo.findByEmpId(parent).getDesgName(),HttpStatus.BAD_REQUEST);
+            }
+
+        }
+        else if( empRepo.findAll().size()<=0)
+        {
+            if(desg=="DIRECTOR") {
+                Employee emp = new Employee(designation, parent, empName);
+                empRepo.save(emp);
+
+                return new ResponseEntity<>("Data Saved",HttpStatus.OK);
+            }
+            else
+            {
+                return new ResponseEntity<>("Unable to find any DIRECTOR in the organization at the moment",HttpStatus.BAD_REQUEST);
+            }
         }
         else
         {
-            status=HttpStatus.BAD_REQUEST;
-            res="Bad Request";
+            Employee emp = empRepo.findByParentId(null);
+            if(emp==null)
+            {
+                Employee emp1 = new Employee(designation, parent, empName);
+                empRepo.save(emp1);
+
+                return new ResponseEntity<>("Data Saved",HttpStatus.OK);
+            }
+            else {
+
+                return new ResponseEntity<>("please enter valid supervisor id",HttpStatus.BAD_REQUEST);
+            }
         }
-        return new ResponseEntity<>(res,status);
     }
 
     @PutMapping("/rest/employees/{empId}")
@@ -107,6 +110,7 @@ public class ControllerClass {
     {
         String result="";
         HttpStatus status=null;
+        // when replace is true
         if(emp.isReplace())
         {
             Employee emp1 = empRepo.findByEmpId(empId);
@@ -117,9 +121,9 @@ public class ControllerClass {
                 Employee newEmployee = new Employee();
                 newEmployee.setParentId(parID);
                 newEmployee.setEmpName(emp.getEmpName());
-                if(empRepo.findByEmpId(empId).designation.level>=degRepo.findByDesgName(emp.empDesg).level)
+                if(empRepo.findByEmpId(empId).designation.level>=degRepo.findByDesgName(emp.empDesg.toUpperCase()).level)
                 {
-                    newEmployee.designation=degRepo.findByDesgName(emp.empDesg);
+                    newEmployee.designation=degRepo.findByDesgName(emp.empDesg.toUpperCase());
                     empRepo.save(newEmployee);
                     List<Employee> parChange =empRepo.findAllByParentId(empId);
                     for(Employee a:parChange)
@@ -141,26 +145,37 @@ public class ControllerClass {
             }
 
         }
+
+        // when replace is false
         else
         {
             Employee employee = empRepo.findByEmpId(empId);
             if(employee!=null)
             {
                 Integer parentID=emp.getParentId();
-                String empDesg=emp.getEmpDesg();
+                String empDesg=emp.getEmpDesg().toUpperCase();
                 String empName=emp.getEmpName();
+                Employee elderChild = new Employee();
+                if(empRepo.findAllByParentId(empId).size()>0) {
+                    elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAsc(empId).get(0);
+                }
 
                 if(parentID!=null) {
-                    Employee employee1 = empRepo.findByEmpId(emp.getParentId());
-                    float baap = employee1.designation.getLevel();
+                    float parLevel =  empRepo.findByEmpId(parentID).designation.getLevel();
                     if (empDesg != null) {
-                        float desgLevel = degRepo.findByDesgName(emp.getEmpDesg()).getLevel();
-                        if (baap < desgLevel) {
+                        float desgLevel = degRepo.findByDesgName(empDesg.toUpperCase()).getLevel();
+
+                        if (parLevel < desgLevel ) {
                             employee.setParentId(parentID);
                             employee.designation= degRepo.findByDesgName(empDesg);
                             //employee.designation.setDesgName(empDesg);
+                            empRepo.save(employee);
                             result="Updated";
                             status=HttpStatus.OK;
+                        }
+                        else
+                        {
+                            return new ResponseEntity( empDesg+" can not report to "+empRepo.findByEmpId(parentID).getDesgName(),HttpStatus.BAD_REQUEST);
                         }
                     }
                     else
@@ -180,28 +195,48 @@ public class ControllerClass {
                         }
                     }
                 }
-                else if(empDesg!=null && parentID==null) {
-                    if (empName != null) {
-                        float currParent = empRepo.findByEmpId(employee.getParentId()).designation.getLevel();
-                        float desgLevel = degRepo.findByDesgName(empDesg).getLevel();
-                        if (!(currParent >= desgLevel)) {
+                else if(parentID==null) {
+                    float parLevel = empRepo.findByEmpId(employee.getParentId()).designation.getLevel();
+                    float desgLevel = degRepo.findByDesgName(empDesg).getLevel();
+                    if(!(desgLevel<elderChild.designation.getLevel()))
+                    {
+                        result="bad request";
+                        return new ResponseEntity("Supervisor can not be lower by subordinate",HttpStatus.BAD_REQUEST);
+                    }
+                    if (empName != null&& empDesg!=null) {
+
+
+                        if ((parLevel < desgLevel)&& desgLevel<elderChild.designation.getLevel()) {
                             employee.setDesgName(empDesg);
+                            employee.setEmpName(empName);
                             result="Updated";
                             status=HttpStatus.OK;
                         }
+
                         else
                         {
                             result="Bad Request";
                             status=HttpStatus.BAD_REQUEST;
                         }
                     }
+
+                    else if(empDesg==null&& empName!=null)
+                    {
+                        employee.setEmpName(empName);
+                        result="Updated";
+                        status=HttpStatus.OK;
+                    }
+
+                    else if(empDesg!=null&& empName==null)
+                    {
+                        employee.setDesgName(empDesg);
+                        result="Updated";
+                        status=HttpStatus.OK;
+                    }
+
+
                 }
-                else if(empName!=null)
-                {
-                    employee.setEmpName(empName);
-                    result="Updated";
-                    status=HttpStatus.OK;
-                }
+
                 else
                 {
                     result="Bad Request";
@@ -209,7 +244,8 @@ public class ControllerClass {
             }
             else
             {
-                result="Bad Request";
+                result="NO RECORD FOUND";
+                status=HttpStatus.NOT_FOUND;
             }
 
             empRepo.save(employee);
@@ -255,7 +291,7 @@ public class ControllerClass {
         }
         else
         {
-            return new ResponseEntity("Bad Request",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity("Bad Request",HttpStatus.NOT_FOUND);
         }
     }
 

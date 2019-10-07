@@ -1,4 +1,4 @@
-package com.rajat.demoemp1;
+package com.rajat.demoemp1.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,11 +6,11 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class PostRequest {
 
-    int empId=-1;
-    String empName;
-    String empDesg;
-    Integer parentId;
-    boolean replace=false;
+
+    public String empName;
+    public String empDesg;
+    public Integer parentId=null;
+    public boolean replace=false;
 
     public boolean isReplace() {
         return replace;
@@ -45,11 +45,5 @@ public class PostRequest {
         this.parentId = parentId;
     }
 
-    public int getEmpId() {
-        return empId;
-    }
 
-    public void setEmpId(int empId) {
-        this.empId = empId;
-    }
         }

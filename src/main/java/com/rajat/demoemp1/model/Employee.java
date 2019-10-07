@@ -1,6 +1,7 @@
-package com.rajat.demoemp1;
+package com.rajat.demoemp1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.rajat.demoemp1.model.Designation;
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 @ApiModel(description = "Details about the employees")
 @Entity
 public class Employee {
-    Employee()
+  public   Employee()
     {
 
     }
@@ -29,10 +30,10 @@ public class Employee {
     @Transient
     String desgName;
 
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne
     @JoinColumn
     @JsonIgnore
-    Designation designation;
+   public  Designation designation;
 
     public String getDesgName() {
         return designation.desgName;
@@ -48,7 +49,7 @@ public class Employee {
 
     String empName;
 
-    Employee(Designation designation,int parentId,String empName)
+  public   Employee(Designation designation,Integer parentId,String empName)
     {
 //        this.empId=empId;
         this.designation=designation;

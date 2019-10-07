@@ -1,4 +1,4 @@
-package com.rajat.demoemp1;
+package com.rajat.demoemp1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,7 +15,7 @@ public class Designation {
     int desId;
     String desgName;
     @JsonIgnore
-    float level;
+   public  float level;
 
     public int getDesId()
     {
