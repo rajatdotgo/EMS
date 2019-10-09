@@ -13,13 +13,15 @@ public class employeeValidate {
     EmployeeRepo empRepo;
     @Autowired
     DesignationRepo degRepo;
-    public Boolean empExist(int id){
+    public Boolean empExist(Integer id){
+        if(id==null) return false;
         return(empRepo.findByEmpId(id)!=null);
     }
 
     public Boolean desExist(String desg)
     {
-        return (degRepo.findByDesgNameLike(desg)!=null);
+        if(desg==null||desg.trim().equals("")) return false;
+        return (degRepo.findByDesgNameLike(desg.toUpperCase())!=null);
     }
 
     public Boolean designationValid(Employee employee,String newDesg)
