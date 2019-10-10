@@ -17,7 +17,7 @@ public class Designation {
     @JsonIgnore
    public  float level;
 
-    public int getDesId()
+    public Integer getDesId()
     {
         return desId;
     }
@@ -31,7 +31,7 @@ public class Designation {
     }
 
     public void setDesgName(String desgName) {
-        this.desgName = desgName;
+        this.desgName = desgName.trim().toUpperCase();
     }
 
     public float getLevel() {

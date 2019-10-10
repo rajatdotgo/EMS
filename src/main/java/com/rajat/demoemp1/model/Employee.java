@@ -25,7 +25,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int empId;
+    Integer empId;
 
     @Transient
     String desgName;
@@ -40,7 +40,7 @@ public class Employee {
     }
 
     public void setDesgName(String desgName) {
-        this.desgName = desgName;
+        this.desgName = desgName.trim().toUpperCase();
     }
 
     @JsonIgnore
@@ -57,7 +57,7 @@ public class Employee {
         this.empName=empName;
     }
 
-    public int getEmpId()
+    public Integer getEmpId()
     {
         return empId;
     }
@@ -71,7 +71,7 @@ public class Employee {
         this.designation = designation;
     }
 
-    public void setEmpId(int empId) {
+    public void setEmpId(Integer empId) {
         this.empId = empId;
     }
 
@@ -88,6 +88,6 @@ public class Employee {
     }
 
     public void setEmpName(String empName) {
-        this.empName = empName;
+        this.empName = empName.trim();
     }
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Default Suite]">
+  <test thread-count="5" name="demoemp1(failed)">
+    <classes>
+      <class name="com.rajat.demoemp1.ControllerClassTest">
+        <methods>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="updateEmpDirectorWithDirector"/>
+          <include name="updateEmpInvalidParId"/>
+          <include name="updateEmpPromotion"/>
+          <include name="putEmpWithPromotion"/>
+          <include name="setUp"/>
+          <include name="updateHulkChildfOfCaptain"/>
+          <include name="postNewEmployeeTest"/>
+          <include name="replaceWithDirector"/>
+          <include name="postDirectorValidationForManager"/>
+          <include name="putEmpWithDemotion"/>
+          <include name="putEmpWithNoData"/>
+          <include name="putEmpWithInvalidPartialData"/>
+          <include name="delDirectorWithoutChild"/>
+          <include name="getUser"/>
+          <include name="updateEmpDemoteDirector"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="delDirectorWithChild"/>
+          <include name="updateEmpDirectorParChange"/>
+          <include name="updateEmpDemotion"/>
+          <include name="getAllTest"/>
+          <include name="postmultipleDirector"/>
+          <include name="delAllEmployees"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="putEmpWithDemotionPossible"/>
+          <include name="updateEmpNoData"/>
+          <include name="updateEmpDirectorName"/>
+          <include name="putEmpWithPromotionPossible"/>
+          <include name="springTestContextAfterTestMethod"/>
+        </methods>
+      </class> <!-- com.rajat.demoemp1.ControllerClassTest -->
+    </classes>
+  </test> <!-- demoemp1(failed) -->
+</suite> <!-- Failed suite [Default Suite] -->

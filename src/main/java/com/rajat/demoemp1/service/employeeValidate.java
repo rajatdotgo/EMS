@@ -26,6 +26,11 @@ public class employeeValidate {
 
     public Boolean designationValid(Employee employee,String newDesg)
     {
+        float elderChild=99999;
+        if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
+            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAsc(employee.getEmpId()).get(0).designation.getLevel();
+        }
+
         if(employee.designation.getDesId()==1)
         {
             if(employee.designation.getDesId()==degRepo.findByDesgNameLike(newDesg).getDesId())
@@ -33,7 +38,8 @@ public class employeeValidate {
                 return true;
             }
         }
-        else if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<=employee.designation.getLevel())
+        else if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild)
+        //else if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<=employee.designation.getLevel())
        {
            return true;
        }
@@ -51,11 +57,16 @@ public class employeeValidate {
             return false;
         }
         float elderChild = 99999;
+        if(empRepo.findByEmpId(employee.getParentId())==null)
+        {
+            return true;
+        }
         if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
             elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAsc(employee.getEmpId()).get(0).designation.getLevel();
         }
-        if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild&&degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("DIRECTOR").getLevel())
+        if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("DIRECTOR").getLevel())
         {
+            //System.out.println("RAAAM"+employee.getParentId());
             return true;
         }
         else
