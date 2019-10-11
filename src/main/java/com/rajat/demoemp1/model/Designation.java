@@ -1,6 +1,7 @@
 package com.rajat.demoemp1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ public class Designation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     int desId;
+    @JsonProperty("jobTitle")
     String desgName;
     @JsonIgnore
    public  float level;

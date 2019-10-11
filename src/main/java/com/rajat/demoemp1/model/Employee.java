@@ -1,6 +1,7 @@
 package com.rajat.demoemp1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rajat.demoemp1.model.Designation;
 import io.swagger.annotations.ApiModel;
 
@@ -9,7 +10,40 @@ import javax.persistence.*;
 @ApiModel(description = "Details about the employees")
 @Entity
 public class Employee {
-  public   Employee()
+ 
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
+    Integer empId;
+
+    @Transient
+    String desgName;
+
+    @OneToOne
+    @JoinColumn
+    @JsonIgnore
+   public  Designation designation;
+
+    @JsonProperty("jobTitle")
+    public String getDesgName() {
+        return designation.desgName;
+    }
+
+    public void setDesgName(String desgName) {
+        this.desgName = desgName.trim().toUpperCase();
+    }
+
+
+    @Column(nullable = true)
+    @JsonProperty("managerId")
+    private Integer parentId;
+
+    @JsonProperty("name")
+    String empName;
+
+
+    public   Employee()
     {
 
     }
@@ -22,32 +56,6 @@ public class Employee {
                 ", empName='" + empName + '\'' +
                 '}';
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer empId;
-
-    @Transient
-    String desgName;
-
-    @OneToOne
-    @JoinColumn
-    @JsonIgnore
-   public  Designation designation;
-
-    public String getDesgName() {
-        return designation.desgName;
-    }
-
-    public void setDesgName(String desgName) {
-        this.desgName = desgName.trim().toUpperCase();
-    }
-
-    @JsonIgnore
-    @Column(nullable = true)
-    private Integer parentId;
-
-    String empName;
 
   public   Employee(Designation designation,Integer parentId,String empName)
     {
@@ -90,4 +98,6 @@ public class Employee {
     public void setEmpName(String empName) {
         this.empName = empName.trim();
     }
+
+    
 }

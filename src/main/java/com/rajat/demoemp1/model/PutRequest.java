@@ -18,7 +18,7 @@ public class PutRequest {
 
     public PutRequest(String name, String jobTitle, Integer managerId, boolean replace) {
         this.name = name.trim();
-        this.jobTitle = jobTitle.toUpperCase().trim();
+        this.jobTitle = jobTitle;
         this.managerId = managerId;
         this.replace = replace;
     }

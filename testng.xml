@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite">
-    <test verbose="2" preserve-order="true" name="C:/workspace/demoemp1">
+<suite name="All Test Suite" parallel="methods" thread-count="33">
+    <test name ="parallelTest">
         <classes>
-            <class name="">
-
+            <class name="com.rajat.demoemp1.ControllerClassTest">
+                <methods>
+                    <include name="postNewEmployeeTest"/>
+                    <include name="postDirectorValidationForManager"/>
+                    <include name="postmultipleDirector"/>
+                    <include name="postNoData"/>
+                    <include name="postPartialData"/>
+                    <include name="postInvalidParentId"/>
+                    <include name="postHierarchyViolation"/>
+                    <include name="postInvalidDesignation"/>
+                    <include name="delInvalidId"/>
+                    <include name="delDirectorWithChild"/>
+                    <include name="delDirectorWithoutChild"/>
+                    <include name="delAllEmployees"/>
+                    <include name="updateEmpInvalidId"/>
+                    <include name="updateEmpNoData"/>
+                    <include name="updateEmpInvalidParId"/>
+                    <include name="updateEmpPromotion"/>
+                    <include name="updateEmpDemotion"/>
+                    <include name="updateEmpDemoteDirector"/>
+                    <include name="updateEmpDirectorName"/>
+                    <include name="updateEmpDirectorWithDirector"/>
+                    <include name="updateEmpDirectorParChange"/>
+                    <include name="updateHulkChildfOfCaptain"/>
+                    <include name="putEmpWithNoData"/>
+                    <include name="putEmpWithInvalidPartialData"/>
+                    <include name="putEmpWithDemotion"/>
+                    <include name="putEmpWithDemotionPossible"/>
+                    <include name="putEmpWithPromotionPossible"/>
+                    <include name="putEmpWithPromotion"/>
+                    <include name="replaceWithDirector"/>
+                    <include name="getAllTest"/>
+                    <include name="getUser"/>
+                    <include name="getUserInvalidId"/>
+                    <include name="getUserNullId"/>
+                </methods>
             </class>
         </classes>
     </test>

@@ -36,6 +36,10 @@ public class ControllerClass {
     @ApiOperation(value="Finds an employee by employee id otherwise suitable response")
     public ResponseEntity findParticular(@ApiParam(value = "Employee unique id for the details you need to retrieve",required = true) @PathVariable("empId") int empId)
     {
+        if(empId<0)
+        {
+            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+        }
         return empService.findParticular(empId);
 
     }
@@ -52,10 +56,29 @@ public class ControllerClass {
     @ApiOperation(value="Updates a particular employee by Id ")
     public ResponseEntity putData(@ApiParam(value = "Employee unique id whose details you need to update",required = true)@PathVariable("empId") int empId, @RequestBody PutRequest emp) {
 
+
+        if(empId<0)
+        {
+            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+        }
+        if((emp.getName()==null||emp.getName()=="")&&(emp.getManagerId()==null)&&(emp.getJobTitle()==null||emp.getJobTitle()==""))
+        {
+            return new ResponseEntity<>("Please enter some data you wanted to update",HttpStatus.BAD_REQUEST);
+        }
+        if (empRepo.findByEmpId(empId).designation.getDesId() == 1 &&emp.getJobTitle()!="Director") {
+            return new ResponseEntity("You can not alter the Director", HttpStatus.BAD_REQUEST);
+        }
+        if(emp.getName().matches(".*\\d.*"))
+        {
+            return new ResponseEntity("invalid name",HttpStatus.BAD_REQUEST);
+        }
+
         ResponseEntity re= null;
         if (!empValidate.empExist(empId)) {
-            re =  new ResponseEntity("No employee found by given id", HttpStatus.NOT_FOUND);
+            re =  new ResponseEntity("No employee found by given id", HttpStatus.BAD_REQUEST);
         }
+
+
         // when replace is true
        else if (emp.isReplace()) {
            re  = empService.replaceEmployee(empId,emp);
@@ -70,6 +93,10 @@ public class ControllerClass {
     @ApiOperation(value="Delete an employee by id otherwise suitable response")
     public ResponseEntity deleteEmployee(@ApiParam(value = "Employee unique id whom you want to delete",required = true)@PathVariable("employeeId") int employeeId)
     {
+        if(employeeId<0)
+        {
+            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+        }
        return  empService.deleteEmployee(employeeId);
     }
 

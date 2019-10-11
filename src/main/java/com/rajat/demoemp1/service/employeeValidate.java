@@ -21,14 +21,14 @@ public class employeeValidate {
     public Boolean desExist(String desg)
     {
         if(desg==null||desg.trim().equals("")) return false;
-        return (degRepo.findByDesgNameLike(desg.toUpperCase())!=null);
+        return (degRepo.findByDesgNameLike(desg)!=null);
     }
 
     public Boolean designationValid(Employee employee,String newDesg)
     {
         float elderChild=99999;
         if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
-            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAsc(employee.getEmpId()).get(0).designation.getLevel();
+            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAscEmpNameAsc(employee.getEmpId()).get(0).designation.getLevel();
         }
 
         if(employee.designation.getDesId()==1)
@@ -62,11 +62,11 @@ public class employeeValidate {
             return true;
         }
         if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
-            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAsc(employee.getEmpId()).get(0).designation.getLevel();
+            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAscEmpNameAsc(employee.getEmpId()).get(0).designation.getLevel();
         }
-        if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("DIRECTOR").getLevel())
+        if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
         {
-            //System.out.println("RAAAM"+employee.getParentId());
+            System.out.println("RAAAM"+employee.getParentId());
             return true;
         }
         else
