@@ -4,8 +4,8 @@ import com.rajat.demoemp1.repository.DesignationRepo;
 import com.rajat.demoemp1.repository.EmployeeRepo;
 import com.rajat.demoemp1.model.PutRequest;
 import com.rajat.demoemp1.model.PostRequest;
-import com.rajat.demoemp1.service.employeeService;
-import com.rajat.demoemp1.service.employeeValidate;
+import com.rajat.demoemp1.service.EmployeeService;
+import com.rajat.demoemp1.service.EmployeeValidate;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,11 @@ public class ControllerClass {
     @Autowired
     DesignationRepo degRepo;
     @Autowired
-    employeeService empService;
+    EmployeeService empService;
     @Autowired
-    employeeValidate empValidate;
+    EmployeeValidate empValidate;
+
+
 
     @GetMapping("/rest/employees")
     @ApiOperation(value="Finds all the employees sorted according to their designation")
@@ -61,11 +63,11 @@ public class ControllerClass {
         {
             return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
         }
-        if((emp.getName()==null||emp.getName()=="")&&(emp.getManagerId()==null)&&(emp.getJobTitle()==null||emp.getJobTitle()==""))
+        if((emp.getName()==null||emp.getName().equals(""))&&(emp.getManagerId()==null)&&(emp.getJobTitle()==null||emp.getJobTitle().equals("")))
         {
             return new ResponseEntity<>("Please enter some data you wanted to update",HttpStatus.BAD_REQUEST);
         }
-        if (empRepo.findByEmpId(empId).designation.getDesId() == 1 &&emp.getJobTitle()!="Director") {
+        if (empRepo.findByEmpId(empId).designation.getDesId() == 1 &&(!emp.getJobTitle().equals("Director"))) {
             return new ResponseEntity("You can not alter the Director", HttpStatus.BAD_REQUEST);
         }
         if(emp.getName().matches(".*\\d.*"))

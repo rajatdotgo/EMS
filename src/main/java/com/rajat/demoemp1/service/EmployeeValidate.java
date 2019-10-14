@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class employeeValidate {
+public class EmployeeValidate {
 
     @Autowired
     EmployeeRepo empRepo;
     @Autowired
     DesignationRepo degRepo;
+
+
     public Boolean empExist(Integer id){
         if(id==null) return false;
         return(empRepo.findByEmpId(id)!=null);
@@ -24,12 +26,21 @@ public class employeeValidate {
         return (degRepo.findByDesgNameLike(desg)!=null);
     }
 
-    public Boolean designationValid(Employee employee,String newDesg)
-    {
+    public Boolean isSmallerThanParent(Employee employee, String newDesg){
+
+        return empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel();
+    }
+
+    public Boolean isGreaterThanChild(Employee employee, String newDesg){
         float elderChild=99999;
-        if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
+        if(!empRepo.findAllByParentId(employee.getEmpId()).isEmpty()) {
             elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAscEmpNameAsc(employee.getEmpId()).get(0).designation.getLevel();
         }
+        return degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild;
+    }
+
+    public Boolean designationValid(Employee employee,String newDesg)
+    {
 
         if(employee.designation.getDesId()==1)
         {
@@ -38,7 +49,7 @@ public class employeeValidate {
                 return true;
             }
         }
-        else if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild)
+        else if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg))
         //else if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<=employee.designation.getLevel())
        {
            return true;
@@ -56,17 +67,15 @@ public class employeeValidate {
         {
             return false;
         }
-        float elderChild = 99999;
+
         if(empRepo.findByEmpId(employee.getParentId())==null)
         {
             return true;
         }
-        if(empRepo.findAllByParentId(employee.getEmpId()).size()>0) {
-            elderChild = empRepo.findAllByParentIdOrderByDesignation_levelAscEmpNameAsc(employee.getEmpId()).get(0).designation.getLevel();
-        }
-        if(empRepo.findByEmpId(employee.getParentId()).designation.getLevel()<degRepo.findByDesgNameLike(newDesg).getLevel()&&degRepo.findByDesgNameLike(newDesg).getLevel()<elderChild && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
+
+        if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
         {
-            System.out.println("RAAAM"+employee.getParentId());
+
             return true;
         }
         else
@@ -78,8 +87,8 @@ public class employeeValidate {
     public Boolean parentPossible(Employee employee,int parentId)
     {
         if(!empExist(parentId)) return false;
-        if(empRepo.findByEmpId(parentId).designation.getLevel()<employee.designation.getLevel()) return true;
-        else return false;
+        return (empRepo.findByEmpId(parentId).designation.getLevel()<employee.designation.getLevel()) ;
+
 
     }
 }

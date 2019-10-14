@@ -4,10 +4,10 @@ package com.rajat.demoemp1.model;
 public class PutRequest {
 
 
-    public String name =null;
-    public String jobTitle =null;
-    public Integer managerId =null;
-    public boolean replace=false;
+    private String name =null;
+    private String jobTitle =null;
+    private Integer managerId =null;
+    private boolean replace=false;
 
     public PutRequest(){}
 

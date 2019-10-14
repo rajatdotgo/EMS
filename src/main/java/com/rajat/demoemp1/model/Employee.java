@@ -2,7 +2,7 @@ package com.rajat.demoemp1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rajat.demoemp1.model.Designation;
+
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
@@ -59,7 +59,7 @@ public class Employee {
 
   public   Employee(Designation designation,Integer parentId,String empName)
     {
-//        this.empId=empId;
+
         this.designation=designation;
         this.parentId=parentId;
         this.empName=empName;

@@ -3,9 +3,9 @@ package com.rajat.demoemp1.model;
 public class PostRequest {
 
 
-    public String name =null;
-    public String jobTitle =null;
-    public Integer managerId =null;
+    private String name =null;
+    private String jobTitle =null;
+    private Integer managerId =null;
 
    public PostRequest()
     {}
