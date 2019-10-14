@@ -35,31 +35,7 @@ public class employeeService {
             return  new ResponseEntity("No record found",HttpStatus.NOT_FOUND);
         }
     }
-//
-//    public Map<String,Object> findUpdated(int empId)
-//    {
-//        Employee manager=null;
-//        List<Employee> colleagues=null;
-//        Map<String,Object> map=new LinkedHashMap<>();
-//        Employee emp=empRepo.findByEmpId(empId);
-//
-//        map.put("employee", emp);
-//
-//        if (emp.getParentId() != null) {
-//            manager = empRepo.findByEmpId(emp.getParentId());
-//            map.put("manager", manager);
-//
-//            colleagues = empRepo.findAllByParentIdAndEmpIdIsNotOrderByDesignation_levelAscEmpNameAsc(emp.getParentId(), emp.getEmpId());
-//            if (colleagues.size() != 0)
-//                map.put("colleagues", colleagues);
-//        }
-//
-//        List<Employee> reporting = empRepo.findAllByParentIdAndEmpIdIsNotOrderByDesignation_levelAscEmpNameAsc(emp.getEmpId(), emp.getEmpId());
-//        if (reporting.size() != 0)
-//            map.put("subordinates", reporting);
-//        return map;
-//
-//    }
+
 
     public ResponseEntity findParticular(int empId){
 
