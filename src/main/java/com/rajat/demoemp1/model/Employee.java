@@ -31,7 +31,7 @@ public class Employee {
     }
 
     public void setDesgName(String desgName) {
-        this.desgName = desgName.trim().toUpperCase();
+        this.desgName = desgName;
     }
 
 

@@ -71,9 +71,8 @@ public class EmployeeValidate {
         if(empRepo.findByEmpId(employee.getParentId())==null)
         {
             return true;
-        }
-
-        if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) && degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
+        }                                                                                                 // comment below is just for checking purpose plz leave as it is
+        if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) )       //&& degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
         {
 
             return true;
@@ -87,7 +86,7 @@ public class EmployeeValidate {
     public Boolean parentPossible(Employee employee,int parentId)
     {
         if(!empExist(parentId)) return false;
-        return (empRepo.findByEmpId(parentId).designation.getLevel()<employee.designation.getLevel()) ;
+        return (empRepo.findByEmpId(parentId).designation.getLevel()<employee.designation.getLevel()) ;     //checking for level of employee against supervisor
 
 
     }

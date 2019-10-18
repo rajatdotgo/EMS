@@ -43,11 +43,11 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
        @Test(priority = 2)
     public void postNewEmployeeTest() throws Exception
     {
-        PostRequest employeePost=new PostRequest("captain marvel","intern",2);
+        PostRequest employeePost=new PostRequest("captain marvel","Intern",2);
         ObjectMapper mapper=new ObjectMapper();
         String jsonInput=mapper.writeValueAsString(employeePost);
         MvcResult result=mvc.perform(MockMvcRequestBuilders.post("/rest/employees").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 //        String resultOutput=result.getResponse().getContentAsString();
 //        Assert.assertEquals("Employee Created",resultOutput)
     }
@@ -106,7 +106,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         mvc.perform(MockMvcRequestBuilders.post("/rest/employees").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
-        employee.setJobTitle("manager");
+        employee.setJobTitle("Manager");
         mvc.perform(MockMvcRequestBuilders.post("/rest/employees").content(mapper.writeValueAsString(employee)).contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
@@ -132,13 +132,13 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
     public void delDirectorWithChild () throws Exception                //Deleting director with children
     {
         mvc.perform(MockMvcRequestBuilders.delete("/rest/employees/1"))
-                .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
     @Test
     public void delDirectorWithoutChild () throws Exception                //Deleting director with children
     {
         mvc.perform(MockMvcRequestBuilders.delete("/rest/employees/1"))
-                .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
     @Test
     public void delAllEmployees() throws Exception                //Deleting director without children
@@ -146,7 +146,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         for(int empId=10;empId>0;empId--)
         {
             mvc.perform(MockMvcRequestBuilders.delete("/rest/employees/"+empId))
-                    .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+                    .andExpect(MockMvcResultMatchers.status().isNoContent()).andReturn();
         }
     }
 
@@ -159,7 +159,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         ObjectMapper mapper = new ObjectMapper();
         String jsonInput = mapper.writeValueAsString(employeePut);
         mvc.perform(MockMvcRequestBuilders.put("/rest/employees/13").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isNotFound()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
     }
 
     @Test
@@ -169,7 +169,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         ObjectMapper mapper = new ObjectMapper();
         String jsonInput = mapper.writeValueAsString(employeePut);
         mvc.perform(MockMvcRequestBuilders.put("/rest/employees/2").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isExpectationFailed()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
     }
 
@@ -226,7 +226,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         ObjectMapper mapper = new ObjectMapper();
         String jsonInput = mapper.writeValueAsString(employeePut);
         mvc.perform(MockMvcRequestBuilders.put("/rest/employees/1").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
     }
 
@@ -244,7 +244,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
     @Test
     public void updateEmpDirectorWithDirector() throws Exception                                                 // updating director designation to director
     {
-        PutRequest employeePut = new PutRequest("","director",null,false);
+        PutRequest employeePut = new PutRequest("","Director",null,false);
         ObjectMapper mapper = new ObjectMapper();
         String jsonInput = mapper.writeValueAsString(employeePut);
         mvc.perform(MockMvcRequestBuilders.put("/rest/employees/1").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
@@ -269,7 +269,7 @@ public class ControllerClassTest extends AbstractTransactionalTestNGSpringContex
         ObjectMapper mapper = new ObjectMapper();
         String jsonInput = mapper.writeValueAsString(employeePut);
         mvc.perform(MockMvcRequestBuilders.put("/rest/employees/1").content(jsonInput).contentType(MediaType.APPLICATION_JSON_VALUE)).andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isForbidden()).andReturn();
+                .andExpect(MockMvcResultMatchers.status().isBadRequest()).andReturn();
 
     }
 

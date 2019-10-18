@@ -6,6 +6,7 @@ import com.rajat.demoemp1.model.PutRequest;
 import com.rajat.demoemp1.model.PostRequest;
 import com.rajat.demoemp1.service.EmployeeService;
 import com.rajat.demoemp1.service.EmployeeValidate;
+import com.rajat.demoemp1.util.MessageConstant;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class ControllerClass {
     EmployeeService empService;
     @Autowired
     EmployeeValidate empValidate;
+    @Autowired
+    MessageConstant message;
 
 
 
@@ -40,7 +43,7 @@ public class ControllerClass {
     {
         if(empId<0)
         {
-            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(message.getMessage("INVALID_ID"),HttpStatus.BAD_REQUEST);
         }
         return empService.findParticular(empId);
 
@@ -61,28 +64,29 @@ public class ControllerClass {
 
         if(empId<0)
         {
-            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(message.getMessage("INVALID_ID"),HttpStatus.BAD_REQUEST);
+        }
+        if (!empValidate.empExist(empId)) {
+            return new ResponseEntity(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
         }
         if((emp.getName()==null||emp.getName().equals(""))&&(emp.getManagerId()==null)&&(emp.getJobTitle()==null||emp.getJobTitle().equals("")))
         {
-            return new ResponseEntity<>("Please enter some data you wanted to update",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"),HttpStatus.BAD_REQUEST);
         }
         if (empRepo.findByEmpId(empId).designation.getDesId() == 1 &&(!emp.getJobTitle().equals("Director"))) {
             return new ResponseEntity("You can not alter the Director", HttpStatus.BAD_REQUEST);
         }
         if(emp.getName().matches(".*\\d.*"))
         {
-            return new ResponseEntity("invalid name",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(message.getMessage("INVALID_NAME"),HttpStatus.BAD_REQUEST);
         }
 
         ResponseEntity re= null;
-        if (!empValidate.empExist(empId)) {
-            re =  new ResponseEntity("No employee found by given id", HttpStatus.BAD_REQUEST);
-        }
+
 
 
         // when replace is true
-       else if (emp.isReplace()) {
+        if (emp.isReplace()) {
            re  = empService.replaceEmployee(empId,emp);
         }
         // when replace is false
@@ -97,7 +101,7 @@ public class ControllerClass {
     {
         if(employeeId<0)
         {
-            return new ResponseEntity("invalid id",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(message.getMessage("INVALID_ID"),HttpStatus.BAD_REQUEST);
         }
        return  empService.deleteEmployee(employeeId);
     }

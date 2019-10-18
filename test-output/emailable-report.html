@@ -25,78 +25,220 @@ td,th {border:1px solid #009;padding:.25em .5em}
 <body>
 <table cellspacing="0" cellpadding="0" class="testOverview">
 <tr><th>Test</th><th>Methods<br/>Passed</th><th>Scenarios<br/>Passed</th><th># skipped</th><th># failed</th><th>Total<br/>Time</th><th>Included<br/>Groups</th><th>Excluded<br/>Groups</th></tr>
-<tr><td style="text-align:left;padding-right:2em"><a href="#t1">demoemp1</a></td><td class="numi">33</td><td class="numi">33</td><td class="numi">0</td><td class="numi">0</td><td class="numi">13.9 seconds</td><td class="numi"></td><td class="numi"></td></tr>
+<tr><td style="text-align:left;padding-right:2em"><a href="#t1">demoemp1</a></td><td class="numi">19</td><td class="numi">19</td><td class="numi">0</td><td class="numi_attn">14</td><td class="numi">9.0 seconds</td><td class="numi"></td><td class="numi"></td></tr>
 </table>
 <table cellspacing="0" cellpadding="0" class="methodOverview" id="summary">
 <tr><th>Class</th><th>Method</th><th># of<br/>Scenarios</th><th>Start</th><th>Time<br/>(ms)</th></tr>
-<tr id="t1"><th colspan="5">demoemp1 &#8212; passed</th></tr>
-<tr class="passedodd"><td rowspan="33">com.rajat.demoemp1.ControllerClassTest</td><td><a href="#m1"><b>delAllEmployees</b>  </a></td><td class="numi">1</td><td>1570794468450</td><td class="numi">999</td></tr><tr class="passedodd"><td><a href="#m2"><b>delDirectorWithChild</b>  </a></td><td class="numi">1</td><td>1570794469472</td><td class="numi">19</td></tr><tr class="passedodd"><td><a href="#m3"><b>delDirectorWithoutChild</b>  </a></td><td class="numi">1</td><td>1570794469504</td><td class="numi">14</td></tr><tr class="passedodd"><td><a href="#m4"><b>delInvalidId</b>  </a></td><td class="numi">1</td><td>1570794469530</td><td class="numi">3</td></tr><tr class="passedodd"><td><a href="#m5"><b>postHierarchyViolation</b>  </a></td><td class="numi">1</td><td>1570794469547</td><td class="numi">143</td></tr><tr class="passedodd"><td><a href="#m6"><b>postInvalidDesignation</b>  </a></td><td class="numi">1</td><td>1570794469704</td><td class="numi">6</td></tr><tr class="passedodd"><td><a href="#m7"><b>postInvalidParentId</b>  </a></td><td class="numi">1</td><td>1570794469725</td><td class="numi">12</td></tr><tr class="passedodd"><td><a href="#m8"><b>postNoData</b>  </a></td><td class="numi">1</td><td>1570794469748</td><td class="numi">4</td></tr><tr class="passedodd"><td><a href="#m9"><b>postPartialData</b>  </a></td><td class="numi">1</td><td>1570794469765</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m10"><b>postmultipleDirector</b>  </a></td><td class="numi">1</td><td>1570794469782</td><td class="numi">24</td></tr><tr class="passedodd"><td><a href="#m11"><b>putEmpWithDemotion</b>  </a></td><td class="numi">1</td><td>1570794469821</td><td class="numi">45</td></tr><tr class="passedodd"><td><a href="#m12"><b>putEmpWithDemotionPossible</b>  </a></td><td class="numi">1</td><td>1570794469882</td><td class="numi">65</td></tr><tr class="passedodd"><td><a href="#m13"><b>putEmpWithInvalidPartialData</b>  </a></td><td class="numi">1</td><td>1570794469958</td><td class="numi">6</td></tr><tr class="passedodd"><td><a href="#m14"><b>putEmpWithNoData</b>  </a></td><td class="numi">1</td><td>1570794469976</td><td class="numi">8</td></tr><tr class="passedodd"><td><a href="#m15"><b>putEmpWithPromotion</b>  </a></td><td class="numi">1</td><td>1570794469996</td><td class="numi">22</td></tr><tr class="passedodd"><td><a href="#m16"><b>putEmpWithPromotionPossible</b>  </a></td><td class="numi">1</td><td>1570794470032</td><td class="numi">35</td></tr><tr class="passedodd"><td><a href="#m17"><b>replaceWithDirector</b>  </a></td><td class="numi">1</td><td>1570794470081</td><td class="numi">30</td></tr><tr class="passedodd"><td><a href="#m18"><b>updateEmpDemoteDirector</b>  </a></td><td class="numi">1</td><td>1570794470122</td><td class="numi">11</td></tr><tr class="passedodd"><td><a href="#m19"><b>updateEmpDemotion</b>  </a></td><td class="numi">1</td><td>1570794470141</td><td class="numi">66</td></tr><tr class="passedodd"><td><a href="#m20"><b>updateEmpDirectorName</b>  </a></td><td class="numi">1</td><td>1570794470223</td><td class="numi">8</td></tr><tr class="passedodd"><td><a href="#m21"><b>updateEmpDirectorParChange</b>  </a></td><td class="numi">1</td><td>1570794470272</td><td class="numi">41</td></tr><tr class="passedodd"><td><a href="#m22"><b>updateEmpDirectorWithDirector</b>  </a></td><td class="numi">1</td><td>1570794470414</td><td class="numi">79</td></tr><tr class="passedodd"><td><a href="#m23"><b>updateEmpInvalidId</b>  </a></td><td class="numi">1</td><td>1570794470574</td><td class="numi">13</td></tr><tr class="passedodd"><td><a href="#m24"><b>updateEmpInvalidParId</b>  </a></td><td class="numi">1</td><td>1570794470607</td><td class="numi">45</td></tr><tr class="passedodd"><td><a href="#m25"><b>updateEmpNoData</b>  </a></td><td class="numi">1</td><td>1570794470682</td><td class="numi">20</td></tr><tr class="passedodd"><td><a href="#m26"><b>updateEmpPromotion</b>  </a></td><td class="numi">1</td><td>1570794470727</td><td class="numi">30</td></tr><tr class="passedodd"><td><a href="#m27"><b>updateHulkChildfOfCaptain</b>  </a></td><td class="numi">1</td><td>1570794470771</td><td class="numi">14</td></tr><tr class="passedodd"><td><a href="#m28"><b>getAllTest</b>  </a></td><td class="numi">1</td><td>1570794470801</td><td class="numi">116</td></tr><tr class="passedodd"><td><a href="#m29"><b>postDirectorValidationForManager</b>  </a></td><td class="numi">1</td><td>1570794470930</td><td class="numi">22</td></tr><tr class="passedodd"><td><a href="#m30"><b>getUser</b>  </a></td><td class="numi">1</td><td>1570794470967</td><td class="numi">41</td></tr><tr class="passedodd"><td><a href="#m31"><b>postNewEmployeeTest</b>  </a></td><td class="numi">1</td><td>1570794471028</td><td class="numi">39</td></tr><tr class="passedodd"><td><a href="#m32"><b>getUserInvalidId</b>  </a></td><td class="numi">1</td><td>1570794471082</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m33"><b>getUserNullId</b>  </a></td><td class="numi">1</td><td>1570794471103</td><td class="numi">8</td></tr>
+<tr id="t1"><th colspan="5">demoemp1 &#8212; failed</th></tr>
+<tr class="failedodd"><td rowspan="14">com.rajat.demoemp1.ControllerClassTest</td><td><a href="#m1"><b>delAllEmployees</b>  </a></td><td class="numi">1</td><td>1571395443253</td><td class="numi">274</td></tr><tr class="failedodd"><td><a href="#m2"><b>delDirectorWithChild</b>  </a></td><td class="numi">1</td><td>1571395443557</td><td class="numi">3</td></tr><tr class="failedodd"><td><a href="#m3"><b>delDirectorWithoutChild</b>  </a></td><td class="numi">1</td><td>1571395443578</td><td class="numi">6</td></tr><tr class="failedodd"><td><a href="#m4"><b>postmultipleDirector</b>  </a></td><td class="numi">1</td><td>1571395443842</td><td class="numi">61</td></tr><tr class="failedodd"><td><a href="#m5"><b>putEmpWithDemotionPossible</b>  </a></td><td class="numi">1</td><td>1571395443957</td><td class="numi">7</td></tr><tr class="failedodd"><td><a href="#m6"><b>putEmpWithPromotionPossible</b>  </a></td><td class="numi">1</td><td>1571395444036</td><td class="numi">4</td></tr><tr class="failedodd"><td><a href="#m7"><b>replaceWithDirector</b>  </a></td><td class="numi">1</td><td>1571395444052</td><td class="numi">6</td></tr><tr class="failedodd"><td><a href="#m8"><b>updateEmpDirectorName</b>  </a></td><td class="numi">1</td><td>1571395444109</td><td class="numi">7</td></tr><tr class="failedodd"><td><a href="#m9"><b>updateEmpDirectorWithDirector</b>  </a></td><td class="numi">1</td><td>1571395444161</td><td class="numi">7</td></tr><tr class="failedodd"><td><a href="#m10"><b>updateHulkChildfOfCaptain</b>  </a></td><td class="numi">1</td><td>1571395444252</td><td class="numi">5</td></tr><tr class="failedodd"><td><a href="#m11"><b>getAllTest</b>  </a></td><td class="numi">1</td><td>1571395444273</td><td class="numi">15</td></tr><tr class="failedodd"><td><a href="#m12"><b>postDirectorValidationForManager</b>  </a></td><td class="numi">1</td><td>1571395444301</td><td class="numi">12</td></tr><tr class="failedodd"><td><a href="#m13"><b>getUser</b>  </a></td><td class="numi">1</td><td>1571395444328</td><td class="numi">3</td></tr><tr class="failedodd"><td><a href="#m14"><b>postNewEmployeeTest</b>  </a></td><td class="numi">1</td><td>1571395444348</td><td class="numi">7</td></tr>
+<tr><th colspan="5">demoemp1 &#8212; passed</th></tr>
+<tr class="passedodd"><td rowspan="19">com.rajat.demoemp1.ControllerClassTest</td><td><a href="#m15"><b>delInvalidId</b>  </a></td><td class="numi">1</td><td>1571395443605</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m16"><b>postHierarchyViolation</b>  </a></td><td class="numi">1</td><td>1571395443623</td><td class="numi">130</td></tr><tr class="passedodd"><td><a href="#m17"><b>postInvalidDesignation</b>  </a></td><td class="numi">1</td><td>1571395443772</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m18"><b>postInvalidParentId</b>  </a></td><td class="numi">1</td><td>1571395443787</td><td class="numi">7</td></tr><tr class="passedodd"><td><a href="#m19"><b>postNoData</b>  </a></td><td class="numi">1</td><td>1571395443814</td><td class="numi">4</td></tr><tr class="passedodd"><td><a href="#m20"><b>postPartialData</b>  </a></td><td class="numi">1</td><td>1571395443830</td><td class="numi">3</td></tr><tr class="passedodd"><td><a href="#m21"><b>putEmpWithDemotion</b>  </a></td><td class="numi">1</td><td>1571395443923</td><td class="numi">14</td></tr><tr class="passedodd"><td><a href="#m22"><b>putEmpWithInvalidPartialData</b>  </a></td><td class="numi">1</td><td>1571395443982</td><td class="numi">6</td></tr><tr class="passedodd"><td><a href="#m23"><b>putEmpWithNoData</b>  </a></td><td class="numi">1</td><td>1571395444001</td><td class="numi">4</td></tr><tr class="passedodd"><td><a href="#m24"><b>putEmpWithPromotion</b>  </a></td><td class="numi">1</td><td>1571395444020</td><td class="numi">4</td></tr><tr class="passedodd"><td><a href="#m25"><b>updateEmpDemoteDirector</b>  </a></td><td class="numi">1</td><td>1571395444073</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m26"><b>updateEmpDemotion</b>  </a></td><td class="numi">1</td><td>1571395444092</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m27"><b>updateEmpDirectorParChange</b>  </a></td><td class="numi">1</td><td>1571395444134</td><td class="numi">9</td></tr><tr class="passedodd"><td><a href="#m28"><b>updateEmpInvalidId</b>  </a></td><td class="numi">1</td><td>1571395444186</td><td class="numi">6</td></tr><tr class="passedodd"><td><a href="#m29"><b>updateEmpInvalidParId</b>  </a></td><td class="numi">1</td><td>1571395444208</td><td class="numi">3</td></tr><tr class="passedodd"><td><a href="#m30"><b>updateEmpNoData</b>  </a></td><td class="numi">1</td><td>1571395444224</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m31"><b>updateEmpPromotion</b>  </a></td><td class="numi">1</td><td>1571395444238</td><td class="numi">6</td></tr><tr class="passedodd"><td><a href="#m32"><b>getUserInvalidId</b>  </a></td><td class="numi">1</td><td>1571395444367</td><td class="numi">5</td></tr><tr class="passedodd"><td><a href="#m33"><b>getUserNullId</b>  </a></td><td class="numi">1</td><td>1571395444388</td><td class="numi">7</td></tr>
 </table>
 <h1>demoemp1</h1>
-<h2 id="m1">com.rajat.demoemp1.ControllerClassTest:updateEmpInvalidParId</h2>
+<h2 id="m1">com.rajat.demoemp1.ControllerClassTest:putEmpWithDemotionPossible</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.putEmpWithDemotionPossible(ControllerClassTest.java:325)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m2">com.rajat.demoemp1.ControllerClassTest:delAllEmployees</h2>
+<h2 id="m2">com.rajat.demoemp1.ControllerClassTest:putEmpWithPromotionPossible</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.putEmpWithPromotionPossible(ControllerClassTest.java:335)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m3">com.rajat.demoemp1.ControllerClassTest:putEmpWithInvalidPartialData</h2>
+<h2 id="m3">com.rajat.demoemp1.ControllerClassTest:delDirectorWithoutChild</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;404&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.delDirectorWithoutChild(ControllerClassTest.java:141)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m4">com.rajat.demoemp1.ControllerClassTest:putEmpWithDemotion</h2>
+<h2 id="m4">com.rajat.demoemp1.ControllerClassTest:getUser</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;404&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.getUser(ControllerClassTest.java:374)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m5">com.rajat.demoemp1.ControllerClassTest:postNewEmployeeTest</h2>
+<h2 id="m5">com.rajat.demoemp1.ControllerClassTest:postDirectorValidationForManager</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;201&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.postDirectorValidationForManager(ControllerClassTest.java:62)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m6">com.rajat.demoemp1.ControllerClassTest:delDirectorWithChild</h2>
+<h2 id="m6">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorName</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.updateEmpDirectorName(ControllerClassTest.java:240)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m7">com.rajat.demoemp1.ControllerClassTest:updateEmpDemoteDirector</h2>
+<h2 id="m7">com.rajat.demoemp1.ControllerClassTest:replaceWithDirector</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.replaceWithDirector(ControllerClassTest.java:355)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m8">com.rajat.demoemp1.ControllerClassTest:putEmpWithNoData</h2>
+<h2 id="m8">com.rajat.demoemp1.ControllerClassTest:postmultipleDirector</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;201&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.postmultipleDirector(ControllerClassTest.java:71)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m9">com.rajat.demoemp1.ControllerClassTest:updateEmpPromotion</h2>
+<h2 id="m9">com.rajat.demoemp1.ControllerClassTest:getAllTest</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;404&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.getAllTest(ControllerClassTest.java:364)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m10">com.rajat.demoemp1.ControllerClassTest:replaceWithDirector</h2>
+<h2 id="m10">com.rajat.demoemp1.ControllerClassTest:postNewEmployeeTest</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;201&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.postNewEmployeeTest(ControllerClassTest.java:50)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m11">com.rajat.demoemp1.ControllerClassTest:getAllTest</h2>
+<h2 id="m11">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorWithDirector</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.updateEmpDirectorWithDirector(ControllerClassTest.java:251)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m12">com.rajat.demoemp1.ControllerClassTest:getUserNullId</h2>
+<h2 id="m12">com.rajat.demoemp1.ControllerClassTest:updateHulkChildfOfCaptain</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;200&gt; but was:&lt;400&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.updateHulkChildfOfCaptain(ControllerClassTest.java:283)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m13">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorWithDirector</h2>
+<h2 id="m13">com.rajat.demoemp1.ControllerClassTest:delAllEmployees</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;204&gt; but was:&lt;404&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.delAllEmployees(ControllerClassTest.java:149)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m14">com.rajat.demoemp1.ControllerClassTest:postInvalidParentId</h2>
+<h2 id="m14">com.rajat.demoemp1.ControllerClassTest:delDirectorWithChild</h2>
+<div>
+<div class="stacktrace">java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;404&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:98)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:619)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:195)
+	at com.rajat.demoemp1.ControllerClassTest.delDirectorWithChild(ControllerClassTest.java:135)
+	at org.springframework.test.context.testng.AbstractTestNGSpringContextTests.run(AbstractTestNGSpringContextTests.java:180)
+... Removed 26 stack frames</div>
+</div>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m15">com.rajat.demoemp1.ControllerClassTest:updateEmpInvalidId</h2>
+<h2 id="m15">com.rajat.demoemp1.ControllerClassTest:getUserInvalidId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m16">com.rajat.demoemp1.ControllerClassTest:postDirectorValidationForManager</h2>
+<h2 id="m16">com.rajat.demoemp1.ControllerClassTest:putEmpWithDemotion</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m17">com.rajat.demoemp1.ControllerClassTest:postNoData</h2>
+<h2 id="m17">com.rajat.demoemp1.ControllerClassTest:updateEmpDemoteDirector</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m18">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorName</h2>
+<h2 id="m18">com.rajat.demoemp1.ControllerClassTest:updateEmpPromotion</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m19">com.rajat.demoemp1.ControllerClassTest:getUserInvalidId</h2>
+<h2 id="m19">com.rajat.demoemp1.ControllerClassTest:putEmpWithNoData</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m20">com.rajat.demoemp1.ControllerClassTest:postHierarchyViolation</h2>
+<h2 id="m20">com.rajat.demoemp1.ControllerClassTest:delInvalidId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m21">com.rajat.demoemp1.ControllerClassTest:postmultipleDirector</h2>
+<h2 id="m21">com.rajat.demoemp1.ControllerClassTest:updateEmpNoData</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m22">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorParChange</h2>
+<h2 id="m22">com.rajat.demoemp1.ControllerClassTest:postNoData</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m23">com.rajat.demoemp1.ControllerClassTest:putEmpWithPromotionPossible</h2>
+<h2 id="m23">com.rajat.demoemp1.ControllerClassTest:updateEmpInvalidParId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m24">com.rajat.demoemp1.ControllerClassTest:updateEmpDemotion</h2>
+<h2 id="m24">com.rajat.demoemp1.ControllerClassTest:putEmpWithPromotion</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m25">com.rajat.demoemp1.ControllerClassTest:updateHulkChildfOfCaptain</h2>
+<h2 id="m25">com.rajat.demoemp1.ControllerClassTest:updateEmpDirectorParChange</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m26">com.rajat.demoemp1.ControllerClassTest:putEmpWithDemotionPossible</h2>
+<h2 id="m26">com.rajat.demoemp1.ControllerClassTest:updateEmpInvalidId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m27">com.rajat.demoemp1.ControllerClassTest:delInvalidId</h2>
+<h2 id="m27">com.rajat.demoemp1.ControllerClassTest:postPartialData</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m28">com.rajat.demoemp1.ControllerClassTest:postInvalidDesignation</h2>
+<h2 id="m28">com.rajat.demoemp1.ControllerClassTest:postHierarchyViolation</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m29">com.rajat.demoemp1.ControllerClassTest:putEmpWithPromotion</h2>
+<h2 id="m29">com.rajat.demoemp1.ControllerClassTest:putEmpWithInvalidPartialData</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m30">com.rajat.demoemp1.ControllerClassTest:updateEmpNoData</h2>
+<h2 id="m30">com.rajat.demoemp1.ControllerClassTest:getUserNullId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m31">com.rajat.demoemp1.ControllerClassTest:delDirectorWithoutChild</h2>
+<h2 id="m31">com.rajat.demoemp1.ControllerClassTest:postInvalidParentId</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m32">com.rajat.demoemp1.ControllerClassTest:postPartialData</h2>
+<h2 id="m32">com.rajat.demoemp1.ControllerClassTest:updateEmpDemotion</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
-<h2 id="m33">com.rajat.demoemp1.ControllerClassTest:getUser</h2>
+<h2 id="m33">com.rajat.demoemp1.ControllerClassTest:postInvalidDesignation</h2>
 <p class="totop"><a href="#summary">back to summary</a></p>
 </body></html>
