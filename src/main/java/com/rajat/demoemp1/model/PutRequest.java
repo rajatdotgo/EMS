@@ -4,8 +4,8 @@ package com.rajat.demoemp1.model;
 public class PutRequest {
 
 
-    private String name =null;
-    private String jobTitle =null;
+    private String name ="sadas";
+    private String jobTitle ="dsadas";
     private Integer managerId =null;
     private boolean replace=false;
 

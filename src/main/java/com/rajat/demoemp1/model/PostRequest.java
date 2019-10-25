@@ -3,8 +3,8 @@ package com.rajat.demoemp1.model;
 public class PostRequest {
 
 
-    private String name =null;
-    private String jobTitle =null;
+    private String name ="sdsfwe";
+    private String jobTitle ="adsad";
     private Integer managerId =null;
 
    public PostRequest()
