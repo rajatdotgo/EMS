@@ -1,9 +1,16 @@
 package com.rajat.demoemp1;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DatabasePopulator;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -19,6 +26,27 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @EnableSwagger2
 public class Demoemp1Application {
 
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
+    @Bean(name = "dataSource")
+    public DriverManagerDataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        // schema init
+        Resource initSchema = new ClassPathResource("schema.sql");
+        Resource initData = new ClassPathResource("data.sql");
+        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema, initData);
+        //DatabasePopulator databasePopulator = new ResourceDatabasePopulator( initData);
+        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+        return dataSource;
+    }
     public static void main(String[] args) {
         SpringApplication.run(Demoemp1Application.class, args);
     }
