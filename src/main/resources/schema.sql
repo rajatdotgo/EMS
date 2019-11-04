@@ -18,7 +18,7 @@
 
 
 CREATE TABLE if not exists designation(
-                                          DES_ID INT NOT NULL AUTO_INCREMENT,
+                                          DES_ID INT NOT NULL AUTO_INCREMENT,q
                                           DESG_NAME VARCHAR(255) NOT NULL,
                                           LEVEL FLOAT,
                                           PRIMARY KEY (DES_ID));
