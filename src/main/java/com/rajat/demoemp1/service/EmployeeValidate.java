@@ -6,18 +6,21 @@ import com.rajat.demoemp1.repository.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class EmployeeValidate {
 
     @Autowired
-    EmployeeRepo empRepo;
+   private EmployeeRepo empRepo;
     @Autowired
-    DesignationRepo degRepo;
+   private DesignationRepo degRepo;
 
 
     public Boolean empExist(Integer id){
         if(id==null) return false;
         return(empRepo.findByEmpId(id)!=null);
+
+
     }
 
     public Boolean desExist(String desg)
@@ -71,8 +74,8 @@ public class EmployeeValidate {
         if(empRepo.findByEmpId(employee.getParentId())==null)
         {
             return true;
-        }                                                                                                 // comment below is just for checking purpose plz leave as it is
-        if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) )       //&& degRepo.findByDesgNameLike(newDesg).getLevel()>degRepo.findByDesgNameLike("Director").getLevel())
+        }
+        if(this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) )
         {
 
             return true;

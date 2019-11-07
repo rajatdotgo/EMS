@@ -43,7 +43,6 @@ public class Demoemp1Application {
         Resource initSchema = new ClassPathResource("schema.sql");
         Resource initData = new ClassPathResource("data.sql");
         DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema, initData);
-        //DatabasePopulator databasePopulator = new ResourceDatabasePopulator( initData);
         DatabasePopulatorUtils.execute(databasePopulator, dataSource);
         return dataSource;
     }

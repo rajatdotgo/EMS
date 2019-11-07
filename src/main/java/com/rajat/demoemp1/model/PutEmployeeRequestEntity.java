@@ -1,7 +1,7 @@
 package com.rajat.demoemp1.model;
 
 
-public class PutRequest {
+public class PutEmployeeRequestEntity {
 
 
     private String name ="sadas";
@@ -9,14 +9,14 @@ public class PutRequest {
     private Integer managerId =null;
     private boolean replace=false;
 
-    public PutRequest(){}
+    public PutEmployeeRequestEntity(){}
 
-    public PutRequest(String jobTitle, boolean replace) {
+    public PutEmployeeRequestEntity(String jobTitle, boolean replace) {
         this.jobTitle = jobTitle;
         this.replace = replace;
     }
 
-    public PutRequest(String name, String jobTitle, Integer managerId, boolean replace) {
+    public PutEmployeeRequestEntity(String name, String jobTitle, Integer managerId, boolean replace) {
         this.name = name.trim();
         this.jobTitle = jobTitle;
         this.managerId = managerId;

@@ -8,8 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.rajat.demoemp1.model.PutRequest;
-import com.rajat.demoemp1.model.PostRequest;
+import com.rajat.demoemp1.model.PutEmployeeRequestEntity;
+import com.rajat.demoemp1.model.PostEmployeeRequestEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,13 +20,13 @@ import java.util.Map;
 public class EmployeeService {
 
     @Autowired
-    EmployeeRepo empRepo;
+   private EmployeeRepo empRepo;
     @Autowired
-    DesignationRepo degRepo;
+   private DesignationRepo degRepo;
     @Autowired
-    EmployeeValidate empValidate;
+   private EmployeeValidate empValidate;
     @Autowired
-    MessageConstant message;
+   private MessageConstant message;
 
     public ResponseEntity getAll() {                                                                            /************* this will return list of all employees in a sorted order  *************/
         List<Employee> list = empRepo.findAllByOrderByDesignation_levelAscEmpNameAsc();
@@ -45,7 +46,7 @@ public class EmployeeService {
         HttpStatus status = null;
 
         Employee emp = empRepo.findByEmpId(empId);
-        if (!empValidate.empExist(empId)) {
+        if (emp==null) {
 
 
             return new ResponseEntity<>(message.getMessage("NO_RECORD_FOUND"), HttpStatus.NOT_FOUND);
@@ -107,11 +108,11 @@ public class EmployeeService {
     }
 
 
-    public ResponseEntity employeeUpdate(int oldId, PutRequest emp) {                                                 /******************* this method will serve as false case of put  ***********************/
+    public ResponseEntity employeeUpdate(int oldId, PutEmployeeRequestEntity emp) {                                                 /******************* this method will serve as false case of put  ***********************/
         Employee employee = empRepo.findByEmpId(oldId);
 
 
-        if ((emp.getName() == null || emp.getName().equals("")) && (emp.getManagerId() == null) && (emp.getJobTitle() == null || emp.getJobTitle().equals(""))) {
+        if (StringUtils.isEmpty(emp.getName()) && (emp.getManagerId() == null) && StringUtils.isEmpty(emp.getJobTitle())) {
             return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);          // returning badRequest as user entered nothing to be updated
         }
 
@@ -120,7 +121,7 @@ public class EmployeeService {
 
             if (empRepo.findByEmpId(oldId).designation.getDesId() == 1)
                 return new ResponseEntity<>(message.getMessage("UPDATING_DIRECTOR"), HttpStatus.BAD_REQUEST);                  // badRequest as user is trying to update the supervisor of the director
-            if (emp.getJobTitle() == null) {
+            if (StringUtils.isEmpty(emp.getJobTitle())) {
                 if (empValidate.parentPossible(employee, emp.getManagerId())) {                                        // checking if the new supervisor is valid or not
                     employee.setParentId(emp.getManagerId());
 
@@ -136,7 +137,7 @@ public class EmployeeService {
             }
         }
 
-        if (emp.getJobTitle() != null &&( !emp.getJobTitle().equals(""))) {
+        if (!StringUtils.isEmpty(emp.getJobTitle())) {
             if (empRepo.findByEmpId(oldId).designation.getDesId() == 1 && (!emp.getJobTitle().equals("Director"))) {
                 return new ResponseEntity<>(message.getMessage("UPDATING_DIRECTOR"), HttpStatus.BAD_REQUEST);                  //badRequest user is trying to update jobTitle of director
             }
@@ -158,7 +159,7 @@ public class EmployeeService {
             }
         }
 
-        if (emp.getName() != null && (!emp.getName().trim().equals(""))) {
+        if (!StringUtils.isEmpty(emp.getName())) {
             employee.setEmpName(emp.getName());
         }
 
@@ -167,10 +168,10 @@ public class EmployeeService {
         return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
     }
 
-    public ResponseEntity replaceEmployee(int empId, PutRequest emp) {                                                     /******************* this method will serve as false case of put  ***********************/
+    public ResponseEntity replaceEmployee(int empId, PutEmployeeRequestEntity emp) {                                                     /******************* this method will serve as false case of put  ***********************/
         if (!empValidate.desExist(emp.getJobTitle()))
             return new ResponseEntity<>(message.getMessage("INVALID_DESIGNATION"), HttpStatus.BAD_REQUEST);
-        if (emp.getName() == null || emp.getName().trim().equals(""))
+        if (StringUtils.isEmpty(emp.getName()))
             return new ResponseEntity<>(message.getMessage("INVALID_NAME"), HttpStatus.BAD_REQUEST);
 
        else  if (emp.getManagerId() != null) {
@@ -199,13 +200,13 @@ public class EmployeeService {
         } else return new ResponseEntity<>(message.getMessage("INVALID_DESIGNATION"), HttpStatus.BAD_REQUEST);
     }
 
-    public ResponseEntity addEmployee(PostRequest employee) {
+    public ResponseEntity addEmployee(PostEmployeeRequestEntity employee) {
         if (!empValidate.desExist(employee.getJobTitle())) {
             return new ResponseEntity<>(message.getMessage("INVALID_DESIGNATION"), HttpStatus.BAD_REQUEST);                                                        //entered designation does not exist
         } else if (!(empValidate.empExist(employee.getManagerId())) && degRepo.findByDesgNameLike(employee.getJobTitle()).getDesId() != 1) {                           //supervisor null and designation is not director
             return new ResponseEntity<>(message.getMessage("INVALID_SUPERVISOR"), HttpStatus.BAD_REQUEST);
 
-        } else if (employee.getName() == null || employee.getName().matches(".*\\d.*")) {
+        } else if (StringUtils.isEmpty(employee.getName())|| employee.getName().matches(".*\\d.*")) {
             return new ResponseEntity<>(message.getMessage("INVALID_NAME"), HttpStatus.BAD_REQUEST);                                                           // name containing numbers
         }
         if (!empValidate.empExist(employee.getManagerId())) {           // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employee is director

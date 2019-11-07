@@ -1,23 +1,23 @@
 package com.rajat.demoemp1.model;
 
-public class PostRequest {
+public class PostEmployeeRequestEntity {
 
 
     private String name ="sdsfwe";
     private String jobTitle ="adsad";
     private Integer managerId =null;
 
-   public PostRequest()
+   public PostEmployeeRequestEntity()
     {}
 
-    public PostRequest(String name, String jobTitle, Integer managerId)
+    public PostEmployeeRequestEntity(String name, String jobTitle, Integer managerId)
     {
         this.name = name;
         this.jobTitle = jobTitle;
         this.managerId = managerId;
     }
 
-    public PostRequest(String name, Integer managerId) {
+    public PostEmployeeRequestEntity(String name, Integer managerId) {
         this.name = name;
         this.managerId = managerId;
     }

@@ -2,8 +2,8 @@ package com.rajat.demoemp1.controller;
 
 import com.rajat.demoemp1.repository.DesignationRepo;
 import com.rajat.demoemp1.repository.EmployeeRepo;
-import com.rajat.demoemp1.model.PutRequest;
-import com.rajat.demoemp1.model.PostRequest;
+import com.rajat.demoemp1.model.PutEmployeeRequestEntity;
+import com.rajat.demoemp1.model.PostEmployeeRequestEntity;
 import com.rajat.demoemp1.service.EmployeeService;
 import com.rajat.demoemp1.service.EmployeeValidate;
 import com.rajat.demoemp1.util.MessageConstant;
@@ -13,20 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.lang3.StringUtils;
 
 @RestController
-public class ControllerClass {
+public class EmployeeController {
 
     @Autowired
-    EmployeeRepo empRepo;
+   private EmployeeRepo empRepo;
     @Autowired
-    DesignationRepo degRepo;
+   private DesignationRepo degRepo;
     @Autowired
-    EmployeeService empService;
+   private EmployeeService empService;
     @Autowired
-    EmployeeValidate empValidate;
+   private EmployeeValidate empValidate;
     @Autowired
-    MessageConstant message;
+   private MessageConstant message;
 
 
 
@@ -39,9 +40,9 @@ public class ControllerClass {
 
     @GetMapping("/rest/employees/{empId}")
     @ApiOperation(value="Finds an employee by employee id otherwise suitable response")
-    public ResponseEntity findParticular(@ApiParam(value = "Employee unique id for the details you need to retrieve",example = "1",required = true) @PathVariable("empId") Integer empId)
+    public ResponseEntity getEmployee(@ApiParam(value = "Employee unique id for the details you need to retrieve",example = "1",required = true) @PathVariable("empId") Integer empId)
     {
-        if(empId<0)
+        if(empId<=0)
         {
             return new ResponseEntity(message.getMessage("INVALID_ID"),HttpStatus.BAD_REQUEST);
         }
@@ -52,14 +53,14 @@ public class ControllerClass {
 
     @PostMapping(path = "/rest/employees")
     @ApiOperation(value="Adds a new employee in the organisation")
-    public ResponseEntity<String> saveData(@RequestBody PostRequest employee)
+    public ResponseEntity<String> saveData(@RequestBody PostEmployeeRequestEntity employee)
     {
         return empService.addEmployee(employee);
     }
 
     @PutMapping("/rest/employees/{empId}")
     @ApiOperation(value="Updates a particular employee by Id ")
-    public ResponseEntity putData(@ApiParam(value = "Employee unique id whose details you need to update",example = "1",required = true)@PathVariable("empId") int empId, @RequestBody PutRequest emp) {
+    public ResponseEntity putData(@ApiParam(value = "Employee unique id whose details you need to update",example = "1",required = true)@PathVariable("empId") int empId, @RequestBody PutEmployeeRequestEntity emp) {
 
 
         if(empId<0)
@@ -69,7 +70,7 @@ public class ControllerClass {
         if (!empValidate.empExist(empId)) {
             return new ResponseEntity(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
         }
-        if((emp.getName()==null||emp.getName().equals(""))&&(emp.getManagerId()==null)&&(emp.getJobTitle()==null||emp.getJobTitle().equals("")))
+        if((StringUtils.isEmpty(emp.getName()))&&(emp.getManagerId()==null)&&(StringUtils.isEmpty(emp.getJobTitle())))
         {
             return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"),HttpStatus.BAD_REQUEST);
         }
@@ -81,19 +82,19 @@ public class ControllerClass {
             return new ResponseEntity(message.getMessage("INVALID_NAME"),HttpStatus.BAD_REQUEST);
         }
 
-        ResponseEntity re= null;
+        ResponseEntity responseEntity= null;
 
 
 
         // when replace is true
         if (emp.isReplace()) {
-           re  = empService.replaceEmployee(empId,emp);
+           responseEntity  = empService.replaceEmployee(empId,emp);
         }
         // when replace is false
         else {
-            re  = empService.employeeUpdate(empId, emp);
+            responseEntity  = empService.employeeUpdate(empId, emp);
         }
-        return re;
+        return responseEntity;
     }
     @DeleteMapping("/rest/employees/{employeeId}")
     @ApiOperation(value="Delete an employee by id otherwise suitable response")
