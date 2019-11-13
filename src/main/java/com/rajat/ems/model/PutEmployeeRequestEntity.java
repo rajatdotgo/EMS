@@ -1,4 +1,4 @@
-package com.rajat.demoemp1.model;
+package com.rajat.ems.model;
 
 
 public class PutEmployeeRequestEntity {

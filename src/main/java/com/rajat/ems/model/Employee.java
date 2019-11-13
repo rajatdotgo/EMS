@@ -1,4 +1,4 @@
-package com.rajat.demoemp1.model;
+package com.rajat.ems.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,10 +15,10 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("id")
-    Integer empId;
+    Integer employeeId;
 
     @Transient
-    String desgName;
+    String designationName;
 
     @OneToOne
     @JoinColumn
@@ -26,12 +26,12 @@ public class Employee {
    public  Designation designation;
 
     @JsonProperty("jobTitle")
-    public String getDesgName() {
-        return designation.desgName;
+    public String getDesignationName() {
+        return designation.designationName;
     }
 
-    public void setDesgName(String desgName) {
-        this.desgName = desgName;
+    public void setDesignationName(String designationName) {
+        this.designationName = designationName;
     }
 
 
@@ -40,7 +40,7 @@ public class Employee {
     private Integer parentId;
 
     @JsonProperty("name")
-    String empName;
+    String employeeName;
 
 
     public   Employee()
@@ -50,24 +50,24 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "empId=" + empId +
+                "empId=" + employeeId +
                 ", designation=" + designation +
                 ", parentId=" + parentId +
-                ", empName='" + empName + '\'' +
+                ", empName='" + employeeName + '\'' +
                 '}';
     }
 
-  public   Employee(Designation designation,Integer parentId,String empName)
+  public   Employee(Designation designation,Integer parentId,String employeeName)
     {
 
         this.designation=designation;
         this.parentId=parentId;
-        this.empName=empName;
+        this.employeeName = employeeName;
     }
 
-    public Integer getEmpId()
+    public Integer getEmployeeId()
     {
-        return empId;
+        return employeeId;
     }
 
     public Designation getDesignation()
@@ -79,8 +79,8 @@ public class Employee {
         this.designation = designation;
     }
 
-    public void setEmpId(Integer empId) {
-        this.empId = empId;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Integer getParentId() {
@@ -91,12 +91,12 @@ public class Employee {
         this.parentId = parentId;
     }
 
-    public String getEmpName() {
-        return empName;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setEmpName(String empName) {
-        this.empName = empName.trim();
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName.trim();
     }
 
     

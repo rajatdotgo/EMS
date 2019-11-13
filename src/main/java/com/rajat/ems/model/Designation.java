@@ -1,4 +1,4 @@
-package com.rajat.demoemp1.model;
+package com.rajat.ems.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,27 +13,27 @@ public class Designation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
-    int desId;
+    int designationId;
     @JsonProperty("jobTitle")
-    String desgName;
+    String designationName;
     @JsonIgnore
    public  float level;
 
-    public Integer getDesId()
+    public Integer getDesignationId()
     {
-        return desId;
+        return designationId;
     }
 
-    public void setDesId(int desId) {
-        this.desId = desId;
+    public void setDesignationId(int designationId) {
+        this.designationId = designationId;
     }
 
-    public String getDesgName() {
-        return desgName;
+    public String getDesignationName() {
+        return designationName;
     }
 
-    public void setDesgName(String desgName) {
-        this.desgName = desgName.trim().toUpperCase();
+    public void setDesignationName(String designationName) {
+        this.designationName = designationName.trim().toUpperCase();
     }
 
     public float getLevel() {

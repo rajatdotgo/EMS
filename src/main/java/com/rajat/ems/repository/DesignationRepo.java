@@ -1,10 +1,10 @@
-package com.rajat.demoemp1.repository;
+package com.rajat.ems.repository;
 
-import com.rajat.demoemp1.model.Designation;
+import com.rajat.ems.model.Designation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DesignationRepo extends JpaRepository<Designation,Integer> {
 
-    public Designation findByDesgNameLike(String desName);
+    public Designation findByDesignationNameLike(String desName);
 
 }

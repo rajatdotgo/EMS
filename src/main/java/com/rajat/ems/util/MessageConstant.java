@@ -1,4 +1,4 @@
-package com.rajat.demoemp1.util;
+package com.rajat.ems.util;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.stereotype.Service;

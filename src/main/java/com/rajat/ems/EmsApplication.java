@@ -1,4 +1,4 @@
-package com.rajat.demoemp1;
+package com.rajat.ems;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -24,30 +24,30 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @SpringBootApplication
 @Configuration
 @EnableSwagger2
-public class Demoemp1Application {
-
-    @Value("${spring.datasource.url}")
-    private String url;
-    @Value("${spring.datasource.username}")
-    private String username;
-    @Value("${spring.datasource.password}")
-    private String password;
-    @Bean(name = "dataSource")
-    public DriverManagerDataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        // schema init
-        Resource initSchema = new ClassPathResource("schema.sql");
-        Resource initData = new ClassPathResource("data.sql");
-        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema, initData);
-        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
-        return dataSource;
-    }
+public class EmsApplication {
+//
+//    @Value("${spring.datasource.url}")
+//    private String url;
+//    @Value("${spring.datasource.username}")
+//    private String username;
+//    @Value("${spring.datasource.password}")
+//    private String password;
+//    @Bean(name = "dataSource")
+//    public DriverManagerDataSource dataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+//        dataSource.setUrl(url);
+//        dataSource.setUsername(username);
+//        dataSource.setPassword(password);
+//        // schema init
+//        Resource initSchema = new ClassPathResource("schema.sql");
+//        Resource initData = new ClassPathResource("data.sql");
+//        DatabasePopulator databasePopulator = new ResourceDatabasePopulator(initSchema, initData);
+//        DatabasePopulatorUtils.execute(databasePopulator, dataSource);
+//        return dataSource;
+   // }
     public static void main(String[] args) {
-        SpringApplication.run(Demoemp1Application.class, args);
+        SpringApplication.run(EmsApplication.class, args);
     }
 
     @Bean
@@ -56,7 +56,7 @@ public class Demoemp1Application {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .paths(regex("/rest.*"))
-                .apis(RequestHandlerSelectors.basePackage("com.rajat.demoemp1"))
+                .apis(RequestHandlerSelectors.basePackage("com.rajat.ems"))
                 .build()
                 .apiInfo(apiDetails());
     }
@@ -64,7 +64,7 @@ public class Demoemp1Application {
     private ApiInfo apiDetails(){
         return new ApiInfo(
                 "EMS API",
-                "Its a demo version of the oriinal one",
+                "Its a demo version of the original one",
                 "1.000007",
                 "Free to use for now",
                 new springfox.documentation.service.Contact("Rajat Goyal","","rajatgoyal*******.gmail.com"),
