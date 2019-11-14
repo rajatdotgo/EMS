@@ -4,8 +4,8 @@ package com.rajat.ems.model;
 public class PutEmployeeRequestEntity {
 
 
-    private String name ="sadas";
-    private String jobTitle ="dsadas";
+    private String name ="";
+    private String jobTitle ="";
     private Integer managerId =null;
     private boolean replace=false;
 

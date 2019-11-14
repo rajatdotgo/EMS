@@ -1,6 +1,7 @@
 package com.rajat.ems.controller;
 
 
+import com.rajat.ems.model.Employee;
 import com.rajat.ems.repository.EmployeeRepo;
 import com.rajat.ems.model.PutEmployeeRequestEntity;
 import com.rajat.ems.model.PostEmployeeRequestEntity;
@@ -15,14 +16,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 public class EmployeeController {
 
 
-    private EmployeeService employeeService;
-    private EmployeeRepo employeeRepo;
-    private EmployeeValidate employeeValidate;
-    private MessageConstant message;
+    private final EmployeeService employeeService;
+    private final EmployeeRepo employeeRepo;
+    private final EmployeeValidate employeeValidate;
+    private final MessageConstant message;
 
     @Autowired
     public EmployeeController(EmployeeRepo employeeRepo, EmployeeValidate employeeValidate, MessageConstant message, EmployeeService employeeService) {
@@ -36,68 +40,72 @@ public class EmployeeController {
     @GetMapping("/rest/employees")
     @ApiOperation(value = "Finds all the employees sorted according to their designation")
     public ResponseEntity allEmployees() {
-        return employeeService.getAllEmployees();
+        List<Employee> list = employeeService.getAllEmployees();
+        return new ResponseEntity<>(list,HttpStatus.OK);
     }
 
     @GetMapping("/rest/employees/{empId}")
     @ApiOperation(value = "Finds an employee by employee id otherwise suitable response")
     public ResponseEntity getEmployee(@ApiParam(value = "Employee unique id for the details you need to retrieve", example = "1", required = true) @PathVariable("empId") Integer empId) {
         if (empId <= 0) {
-            return new ResponseEntity(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
-        return employeeService.findEmployeeById(empId);
-
+        Map<String, Object> map = employeeService.findEmployeeById(empId);
+        return new ResponseEntity(map,HttpStatus.OK);
     }
 
 
     @PostMapping(path = "/rest/employees")
     @ApiOperation(value = "Adds a new employee in the organisation")
-    public ResponseEntity<String> saveData(@RequestBody PostEmployeeRequestEntity employee) {
-        return employeeService.addEmployee(employee);
+    public ResponseEntity saveData(@RequestBody PostEmployeeRequestEntity employee) {
+        Employee newEmployee = employeeService.addEmployee(employee);
+        return new ResponseEntity(newEmployee,HttpStatus.CREATED);
     }
 
     @PutMapping("/rest/employees/{empId}")
     @ApiOperation(value = "Updates a particular employee by Id ")
     public ResponseEntity putData(@ApiParam(value = "Employee unique id whose details you need to update", example = "1", required = true) @PathVariable("empId") int empId, @RequestBody PutEmployeeRequestEntity emp) {
 
+        Map<String, Object> map ;
 
         if (empId < 0) {
-            return new ResponseEntity(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
         if (!employeeValidate.empExist(empId)) {
-            return new ResponseEntity(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
         }
         if ((StringUtils.isEmpty(emp.getName())) && (emp.getManagerId() == null) && (StringUtils.isEmpty(emp.getJobTitle()))) {
             return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);
         }
         if (employeeRepo.findByEmployeeId(empId).designation.getDesignationId() == 1 && (!emp.getJobTitle().equals("Director"))&&(!StringUtils.isEmpty(emp.getJobTitle()))) {
-            return new ResponseEntity("You can not alter the Director", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("You can not alter the Director", HttpStatus.BAD_REQUEST);
         }
         if (emp.getName().matches(".*\\d.*")) {
-            return new ResponseEntity(message.getMessage("INVALID_NAME"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("INVALID_NAME"), HttpStatus.BAD_REQUEST);
         }
 
-        ResponseEntity responseEntity = null;
+        ResponseEntity responseEntity;
 
 
         // when replace is true
         if (emp.isReplace()) {
-            responseEntity = employeeService.replaceEmployee(empId, emp);
+            map = employeeService.replaceEmployee(empId, emp);
         }
         // when replace is false
         else {
-            responseEntity = employeeService.employeeUpdate(empId, emp);
+            map = employeeService.employeeUpdate(empId, emp);
         }
-        return responseEntity;
+        return new ResponseEntity(map,HttpStatus.OK);
     }
 
     @DeleteMapping("/rest/employees/{employeeId}")
     @ApiOperation(value = "Delete an employee by id otherwise suitable response")
     public ResponseEntity deleteEmployee(@ApiParam(value = "Employee unique id whom you want to delete", example = "1", required = true) @PathVariable("employeeId") int employeeId) {
         if (employeeId < 0) {
-            return new ResponseEntity(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
-        return employeeService.deleteEmployee(employeeId);
+        employeeService.deleteEmployee(employeeId);
+        return new ResponseEntity(message.getMessage("DELETED"),HttpStatus.NO_CONTENT);
     }
 
 }

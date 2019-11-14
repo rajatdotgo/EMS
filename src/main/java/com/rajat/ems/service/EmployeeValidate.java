@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmployeeValidate {
 
-    private EmployeeRepo employeeRepo;
-    private DesignationRepo designationRepo;
+    private final EmployeeRepo employeeRepo;
+    private final DesignationRepo designationRepo;
 
     @Autowired
     public EmployeeValidate(EmployeeRepo employeeRepo, DesignationRepo designationRepo)
@@ -29,7 +29,7 @@ public class EmployeeValidate {
 
     }
 
-     boolean desExist(String desg)
+     boolean designationExist(String desg)
     {
         if(desg==null||desg.trim().equals("")) return false;
         return (designationRepo.findByDesignationNameLike(desg)!=null);
@@ -53,14 +53,9 @@ public class EmployeeValidate {
 
         if(employee.designation.getDesignationId()==1)
         {
-            if(employee.designation.getDesignationId().equals(designationRepo.findByDesignationNameLike(newDesg).getDesignationId()))
-            {
-                return true;
-            }
+            return employee.designation.getDesignationId().equals(designationRepo.findByDesignationNameLike(newDesg).getDesignationId());
         }
         else return this.isSmallerThanParent(employee, newDesg) && this.isGreaterThanChild(employee, newDesg);
-
-            return false;
 
     }
 
@@ -68,7 +63,7 @@ public class EmployeeValidate {
 
     boolean designationChange(Employee employee, String newDesg)
     {
-        if(!this.desExist(newDesg))
+        if(!this.designationExist(newDesg))
         {
             return false;
         }
