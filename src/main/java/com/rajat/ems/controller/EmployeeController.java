@@ -1,7 +1,9 @@
 package com.rajat.ems.controller;
 
 
-import com.rajat.ems.model.Employee;
+import com.rajat.ems.entity.Employee;
+import com.rajat.ems.exception.BadRequestException;
+import com.rajat.ems.exception.ValidationError;
 import com.rajat.ems.repository.EmployeeRepo;
 import com.rajat.ems.model.PutEmployeeRequestEntity;
 import com.rajat.ems.model.PostEmployeeRequestEntity;
@@ -68,24 +70,27 @@ public class EmployeeController {
 
         Map<String, Object> map ;
 
-        if (empId < 0) {
-            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
+        try{
+            employeeValidate.validateId(empId);
         }
-        if (!employeeValidate.empExist(empId)) {
-            return new ResponseEntity<>(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
+        catch (ValidationError error)
+        {
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_ID",error.cause));
         }
-        if ((StringUtils.isEmpty(emp.getName())) && (emp.getManagerId() == null) && (StringUtils.isEmpty(emp.getJobTitle()))) {
-            return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);
-        }
+
+//        if (empId <= 0) {
+//            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
+//        }
+//        if (!employeeValidate.empExist(empId)) {
+//            return new ResponseEntity<>(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
+//        }
+        employeeValidate.validateBody(emp.getName(),emp.getManagerId(),emp.getJobTitle());
+//        if ((StringUtils.isEmpty(emp.getName())) && (emp.getManagerId() == null) && (StringUtils.isEmpty(emp.getJobTitle()))) {
+//            return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);
+//        }
         if (employeeRepo.findByEmployeeId(empId).designation.getDesignationId() == 1 && (!emp.getJobTitle().equals("Director"))&&(!StringUtils.isEmpty(emp.getJobTitle()))) {
             return new ResponseEntity<>("You can not alter the Director", HttpStatus.BAD_REQUEST);
         }
-        if (emp.getName().matches(".*\\d.*")) {
-            return new ResponseEntity<>(message.getMessage("INVALID_NAME"), HttpStatus.BAD_REQUEST);
-        }
-
-        ResponseEntity responseEntity;
-
 
         // when replace is true
         if (emp.isReplace()) {
@@ -101,7 +106,7 @@ public class EmployeeController {
     @DeleteMapping("/rest/employees/{employeeId}")
     @ApiOperation(value = "Delete an employee by id otherwise suitable response")
     public ResponseEntity deleteEmployee(@ApiParam(value = "Employee unique id whom you want to delete", example = "1", required = true) @PathVariable("employeeId") int employeeId) {
-        if (employeeId < 0) {
+        if (employeeId <= 0) {
             return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
         employeeService.deleteEmployee(employeeId);

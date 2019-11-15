@@ -2,14 +2,13 @@ package com.rajat.ems.service;
 
 import com.rajat.ems.exception.BadRequestException;
 import com.rajat.ems.exception.NotFoundException;
-import com.rajat.ems.model.Employee;
+import com.rajat.ems.entity.Employee;
+import com.rajat.ems.exception.ValidationError;
 import com.rajat.ems.repository.DesignationRepo;
 import com.rajat.ems.repository.EmployeeRepo;
 import com.rajat.ems.util.MessageConstant;
 import com.rajat.ems.model.PutEmployeeRequestEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.rajat.ems.model.PostEmployeeRequestEntity;
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +58,7 @@ public class EmployeeService {
         if (emp==null) {
 
 
-            throw new NotFoundException(message.getMessage("NO_RECORD_FOUND"));
+            throw new NotFoundException(message.getMessage("NOT_FOUND",empId));
         } else {
             map.put("employee", emp);
 
@@ -97,9 +96,15 @@ public class EmployeeService {
 
     /** this method wil delete the employee with the given Id otherwise respective response **/
     public void deleteEmployee(int id) {
-        if (!employeeValidate.empExist(id)) {
-            throw new NotFoundException(message.getMessage("NO_RECORD_FOUND"));
-        } else {
+        try{
+            employeeValidate.validateId(id);
+        }
+        catch(ValidationError error)
+        {
+            throw new NotFoundException(message.getMessage("VALIDATION_ERROR_INVALID_ID",error.cause));
+        }
+
+
             Employee emp = employeeRepo.findByEmployeeId(id);
             if (emp.getDesignationName().equals("Director")) {
                 if (!employeeRepo.findAllByParentId(emp.getEmployeeId()).isEmpty()) {                                              // checking if there are any subordinates of the director
@@ -116,7 +121,7 @@ public class EmployeeService {
                 employeeRepo.delete(emp);
                 //return new ResponseEntity<>(message.getMessage("DELETED"), HttpStatus.NO_CONTENT);
             }
-        }
+
 
     }
 
@@ -126,9 +131,14 @@ public class EmployeeService {
         Employee employee = employeeRepo.findByEmployeeId(oldId);
 
 
-        if (StringUtils.isEmpty(emp.getName()) && (emp.getManagerId() == null) && StringUtils.isEmpty(emp.getJobTitle())) {
-           // return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);          // returning badRequest as user entered nothing to be updated
-            throw new BadRequestException(message.getMessage("INSUFFICIENT_DATA"));
+        employeeValidate.validateBody(emp.getName(),emp.getManagerId(),emp.getJobTitle());
+
+        try {
+            employeeValidate.validateName(emp.getName(),false);
+        }
+        catch(ValidationError error){
+
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
         }
 
 
@@ -143,7 +153,7 @@ public class EmployeeService {
 
                 } else
                     throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
-                   // return new ResponseEntity<>(message.getMessage("INVALID_SUPERVISOR"), HttpStatus.BAD_REQUEST);
+
             } else if (employeeValidate.designationExist(emp.getJobTitle())) {                                                                   // if jobTitle and supervisor id both are not null then check if the new inputs are valid or not
                 employee.designation = designationRepo.findByDesignationNameLike(emp.getJobTitle());
                 if (employeeValidate.parentPossible(employee, emp.getManagerId())) {
@@ -151,7 +161,7 @@ public class EmployeeService {
                     employeeRepo.save(employee);
                 } else
                     throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
-                   // return new ResponseEntity<>(message.getMessage("INVALID_ENTRY"), HttpStatus.BAD_REQUEST);
+
             }
         }
 
@@ -168,6 +178,7 @@ public class EmployeeService {
                 else
                     throw new BadRequestException(message.getMessage("INVALID_DESIGNATION"));
                    // return new ResponseEntity<>(message.getMessage("INVALID_DESIGNATION"), HttpStatus.BAD_REQUEST);
+
             } else if (employeeValidate.empExist(emp.getManagerId())) {
                 employee.setParentId(emp.getManagerId());
                 employeeRepo.save(employee);
@@ -181,6 +192,13 @@ public class EmployeeService {
         }
 
         if (!StringUtils.isEmpty(emp.getName())) {
+            try{
+                employeeValidate.validateName(emp.getName(),false);
+            }
+            catch(ValidationError error)
+            {
+                throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
+            }
             employee.setEmployeeName(emp.getName());
         }
 
@@ -191,12 +209,19 @@ public class EmployeeService {
 
     /** this method will serve as false case of put **/
     public Map<String, Object> replaceEmployee(int empId, PutEmployeeRequestEntity emp) {
-        if (!employeeValidate.designationExist(emp.getJobTitle()))
-            throw new BadRequestException(message.getMessage("INVALID_DESIGNATION"));
-        if (StringUtils.isEmpty(emp.getName()))
-            throw new BadRequestException(message.getMessage("INVALID_NAME"));
+            employeeValidate.validateDesignation(emp.getJobTitle());
 
-       else  if (emp.getManagerId() != null) {
+        try {
+            employeeValidate.validateName(emp.getName(),true);
+        }
+        catch(ValidationError error){
+
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
+        }
+
+
+
+        if (emp.getManagerId() != null) {
             if (!employeeValidate.empExist(emp.getManagerId())) {
                 throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
             }
@@ -223,21 +248,25 @@ public class EmployeeService {
     }
 
     public Employee addEmployee(PostEmployeeRequestEntity employee) {
-        if (!employeeValidate.designationExist(employee.getJobTitle())) {
-            throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));                                                        //entered designation does not exist
-        } else if (!(employeeValidate.empExist(employee.getManagerId())) && designationRepo.findByDesignationNameLike(employee.getJobTitle()).getDesignationId() != 1) {                           //supervisor null and designation is not director
+        employeeValidate.validateDesignation(employee.getJobTitle());                                                    //entered designation does not exist
+          if (!(employeeValidate.empExist(employee.getManagerId())) && designationRepo.findByDesignationNameLike(employee.getJobTitle()).getDesignationId() != 1) {                           //supervisor null and designation is not director
             throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
 
-        } else if (StringUtils.isEmpty(employee.getName())|| employee.getName().matches(".*\\d.*")) {
-            throw new BadRequestException(message.getMessage("INVALID_NAME"));                                                           // name containing numbers
+        }
+        try{
+            employeeValidate.validateName(employee.getName(),true);
+        }
+        catch (ValidationError error)
+        {
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
         }
         if (!employeeValidate.empExist(employee.getManagerId())) {           // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employee is director
             if (employeeRepo.findAll().isEmpty()) {
                 if (designationRepo.findByDesignationNameLike(employee.getJobTitle()).getDesignationId() == 1) {
-                    Employee newEmployeee = new Employee(designationRepo.findByDesignationNameLike(employee.getJobTitle()), employee.getManagerId(), employee.getName());
-                    employeeRepo.save(newEmployeee);
+                    Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employee.getJobTitle()), employee.getManagerId(), employee.getName());
+                    employeeRepo.save(newEmployee);
 
-                    return newEmployeee;
+                    return newEmployee;
                 } else {
                     throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
                 }

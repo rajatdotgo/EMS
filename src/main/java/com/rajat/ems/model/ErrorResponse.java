@@ -1,4 +1,4 @@
-package com.rajat.ems.util;
+package com.rajat.ems.model;
 
 public class ErrorResponse {
     private int status;

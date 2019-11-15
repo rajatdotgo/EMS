@@ -3,8 +3,8 @@ package com.rajat.ems.model;
 public class PostEmployeeRequestEntity {
 
 
-    private String name ="sdsfwe";
-    private String jobTitle ="adsad";
+    private String name ="";
+    private String jobTitle ="";
     private Integer managerId =null;
 
    public PostEmployeeRequestEntity()

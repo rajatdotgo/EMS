@@ -9,20 +9,22 @@ public class MessageConstant implements MessageSourceAware {
 
         private MessageSource source;
 
-        @Override
-        public void setMessageSource(MessageSource messageSource)
-        {
-            this.source=messageSource;
-        }
+
         public String getMessage(String tag)
         {
-            return  this.getMessage(tag,null);
+            return  this.getMessage(tag,new Object[0]);
         }
 
 //        }
-            public String getMessage(String tag,Object params[])
+            public String getMessage(String tag,Object... params)
             {
                 return  source.getMessage(tag,params, Locale.US);
             }
+
+    @Override
+    public void setMessageSource(MessageSource messageSource)
+    {
+        this.source=messageSource;
+    }
 
     }

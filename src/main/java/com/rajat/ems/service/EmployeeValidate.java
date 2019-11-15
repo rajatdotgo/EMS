@@ -1,10 +1,16 @@
 package com.rajat.ems.service;
 
-import com.rajat.ems.model.Employee;
+import com.rajat.ems.entity.Employee;
+import com.rajat.ems.exception.BadRequestException;
+import com.rajat.ems.exception.ValidationError;
 import com.rajat.ems.repository.DesignationRepo;
 import com.rajat.ems.repository.EmployeeRepo;
+import com.rajat.ems.util.MessageConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 
 @Service
@@ -12,40 +18,86 @@ public class EmployeeValidate {
 
     private final EmployeeRepo employeeRepo;
     private final DesignationRepo designationRepo;
+    private final MessageConstant message;
 
     @Autowired
-    public EmployeeValidate(EmployeeRepo employeeRepo, DesignationRepo designationRepo)
+    public EmployeeValidate(EmployeeRepo employeeRepo, DesignationRepo designationRepo, MessageConstant message)
     {
         this.employeeRepo = employeeRepo;
         this.designationRepo = designationRepo;
+        this.message=message;
 
     }
 
+    public void validateName(String name,boolean checkEmpty)
+    {
+        if(checkEmpty) {
+            if (StringUtils.isEmpty(name)) {
+                throw new ValidationError("name", "empty");
+                //return false;
+            }
+        }
+
+        if (name.matches(".*\\d.*")){
+            throw  new ValidationError("name","containing invalid character");
+           // return false;
+        }
+
+        //return true;
+
+    }
+    public void validateId(Integer id)
+    {
+        if(id==null)
+            throw new ValidationError("ID","is null");
+        if(id<=0)
+            throw  new ValidationError("ID","is invalid");
+        if(employeeRepo.findByEmployeeId(id)==null)
+            throw  new ValidationError("ID","does not exist");
+    }
+
+    public void validateBody(String employeeName, Integer employeeId, String jobTitle)
+    {
+        if((StringUtils.isEmpty(employeeName)) && (employeeId == null) && (StringUtils.isEmpty(jobTitle)))
+        {
+            throw new BadRequestException(message.getMessage("INSUFFICIENT_DATA"));
+        }
+    }
 
     public boolean empExist(Integer id){
         if(id==null) return false;
         return(employeeRepo.findByEmployeeId(id)!=null);
 
-
     }
 
-     boolean designationExist(String desg)
+    boolean designationExist(String designation)
     {
-        if(desg==null||desg.trim().equals("")) return false;
-        return (designationRepo.findByDesignationNameLike(desg)!=null);
+        if(designation==null||designation.trim().equals(""))
+            return false;
+        return (designationRepo.findByDesignationNameLike(designation)!=null);
+
     }
 
-    private boolean isSmallerThanParent(Employee employee, String newDesg){
-
-        return employeeRepo.findByEmployeeId(employee.getParentId()).designation.getLevel()< designationRepo.findByDesignationNameLike(newDesg).getLevel();
+     void validateDesignation(String designation)
+    {
+        if(designation==null||designation.trim().equals(""))
+            //return false;
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_DESIGNATION","is empty"));
+        else if (designationRepo.findByDesignationNameLike(designation)==null)
+            throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_DESIGNATION","is incorrect"));
     }
 
-    private boolean isGreaterThanChild(Employee employee, String newDesg){
+    private boolean isSmallerThanParent(Employee employee, String newDesignation){
+
+        return employeeRepo.findByEmployeeId(employee.getParentId()).designation.getLevel()< designationRepo.findByDesignationNameLike(newDesignation).getLevel();
+    }
+
+    private boolean isGreaterThanChild(Employee employee, String newDesignation){
         float elderChild=99999;
         if(!employeeRepo.findAllByParentId(employee.getEmployeeId()).isEmpty()) {
             elderChild = employeeRepo.findAllByParentIdOrderByDesignation_levelAscEmployeeNameAsc(employee.getEmployeeId()).get(0).designation.getLevel();
         }
-        return designationRepo.findByDesignationNameLike(newDesg).getLevel()<elderChild;
+        return designationRepo.findByDesignationNameLike(newDesignation).getLevel()<elderChild;
     }
 
     boolean designationValid(Employee employee, String newDesg)
@@ -61,18 +113,16 @@ public class EmployeeValidate {
 
 
 
-    boolean designationChange(Employee employee, String newDesg)
+    boolean designationChange(Employee employee, String newDesignation)
     {
-        if(!this.designationExist(newDesg))
-        {
-            return false;
-        }
+        this.validateDesignation(newDesignation);
 
-        if(employeeRepo.findByEmployeeId(employee.getParentId())==null)
+
+            if(employeeRepo.findByEmployeeId(employee.getParentId())==null)
         {
             return true;
         }
-        return (this.isSmallerThanParent(employee,newDesg)&&this.isGreaterThanChild(employee,newDesg) );
+        return (this.isSmallerThanParent(employee,newDesignation)&&this.isGreaterThanChild(employee,newDesignation) );
 
     }
 

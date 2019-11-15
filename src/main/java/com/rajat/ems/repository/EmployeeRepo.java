@@ -1,6 +1,6 @@
 package com.rajat.ems.repository;
 
-import com.rajat.ems.model.Employee;
+import com.rajat.ems.entity.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

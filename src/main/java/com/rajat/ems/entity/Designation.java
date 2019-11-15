@@ -1,4 +1,4 @@
-package com.rajat.ems.model;
+package com.rajat.ems.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;

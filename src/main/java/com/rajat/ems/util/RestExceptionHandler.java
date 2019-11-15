@@ -2,6 +2,7 @@ package com.rajat.ems.util;
 
 import com.rajat.ems.exception.BadRequestException;
 import com.rajat.ems.exception.NotFoundException;
+import com.rajat.ems.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
