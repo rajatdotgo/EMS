@@ -252,7 +252,8 @@ public class EmployeeService {
 
     public Employee addEmployee(PostEmployeeRequestEntity employeeToAdd) {
         employeeValidate.validateDesignation(employeeToAdd.getJobTitle());                                                    //entered designation does not exist
-        Employee highestEmployee = this.getHighestPosition();
+
+
         if (!(employeeValidate.empExist(employeeToAdd.getManagerId())) && designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() != designationValidate.getHighestDesignation().getDesignationId()) {                           //supervisor null and designation is not director
             System.err.println("first");
             throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
@@ -265,30 +266,45 @@ public class EmployeeService {
         {
             throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
         }
-        if (!employeeValidate.empExist(employeeToAdd.getManagerId())&& highestEmployee.designation.getLevel()>designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getLevel()) {           // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employeeToAdd is highest designation
+        if(!employeeValidate.empExist(employeeToAdd.getManagerId()))
+            {
 
-                if (designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() == designationValidate.getHighestDesignation().getDesignationId()) {
-                    Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
-                    employeeRepo.save(newEmployee);
-                    highestEmployee.setParentId(newEmployee.getEmployeeId());
-                    employeeRepo.save(highestEmployee);
+                if (employeeRepo.findAll().isEmpty()) {
+                    if(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() == designationValidate.getHighestDesignation().getDesignationId()){
+                        Employee newEmployee =  new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
+                        employeeRepo.save(newEmployee);
+                        return newEmployee;
+                    }
+                    else
+                        throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
 
-                    return newEmployee;
                 } else {
-                    throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
-                }
+                    Employee highestEmployee= this.getHighestPosition();
 
-        } else{
+                             // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employeeToAdd is highest designation
+
+                        if (highestEmployee.designation.getLevel() > designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getLevel()&&designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() == designationValidate.getHighestDesignation().getDesignationId()) {
+                            Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
+                            employeeRepo.save(newEmployee);
+                            highestEmployee.setParentId(newEmployee.getEmployeeId());
+                            employeeRepo.save(highestEmployee);
+                            return newEmployee;
+
+                        } else {
+                            throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
+                        }
+
+                }
+            }
+
+        else{
 
             Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
-            if(employeeToAdd.getManagerId()!=null&&employeeValidate.isSmallerThanParent(newEmployee,employeeToAdd.getJobTitle()))                                          // checking if the designation is valid against supervisor or not
+            if(employeeValidate.isSmallerThanParent(newEmployee,employeeToAdd.getJobTitle()))                                          // checking if the designation is valid against supervisor or not
             {
                 employeeRepo.save(newEmployee);                                                                                                                                  // saving the new employeeToAdd
                 return newEmployee;
-            }
-
-
-        else {
+            } else {
 
                 throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
             }
@@ -299,4 +315,8 @@ public class EmployeeService {
     public Employee getHighestPosition(){
         return employeeRepo.findFirstByOrderByDesignation_levelAscEmployeeNameAsc();
     }
+
+
+
+
 }
