@@ -19,13 +19,15 @@ public class EmployeeValidate {
     private final EmployeeRepo employeeRepo;
     private final DesignationRepo designationRepo;
     private final MessageConstant message;
+    private final DesignationValidate designationValidate;
 
     @Autowired
-    public EmployeeValidate(EmployeeRepo employeeRepo, DesignationRepo designationRepo, MessageConstant message)
+    public EmployeeValidate(EmployeeRepo employeeRepo, DesignationRepo designationRepo, MessageConstant message, DesignationValidate designationValidate)
     {
         this.employeeRepo = employeeRepo;
         this.designationRepo = designationRepo;
         this.message=message;
+        this.designationValidate=designationValidate;
 
     }
 
@@ -34,16 +36,16 @@ public class EmployeeValidate {
         if(checkEmpty) {
             if (StringUtils.isEmpty(name)) {
                 throw new ValidationError("name", "empty");
-                //return false;
+
             }
         }
 
         if (name.matches(".*\\d.*")){
             throw  new ValidationError("name","containing invalid character");
-           // return false;
+
         }
 
-        //return true;
+
 
     }
     public void validateId(Integer id)
@@ -81,13 +83,14 @@ public class EmployeeValidate {
      void validateDesignation(String designation)
     {
         if(designation==null||designation.trim().equals(""))
-            //return false;
+
             throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_DESIGNATION","is empty"));
         else if (designationRepo.findByDesignationNameLike(designation)==null)
             throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_DESIGNATION","is incorrect"));
     }
 
-    private boolean isSmallerThanParent(Employee employee, String newDesignation){
+    public boolean isSmallerThanParent(Employee employee, String newDesignation){
+
 
         return employeeRepo.findByEmployeeId(employee.getParentId()).designation.getLevel()< designationRepo.findByDesignationNameLike(newDesignation).getLevel();
     }
@@ -103,7 +106,7 @@ public class EmployeeValidate {
     boolean designationValid(Employee employee, String newDesg)
     {
 
-        if(employee.designation.getDesignationId()==1)
+        if(employee.designation.getDesignationId()==designationValidate.getHighestDesignation().getDesignationId())
         {
             return employee.designation.getDesignationId().equals(designationRepo.findByDesignationNameLike(newDesg).getDesignationId());
         }

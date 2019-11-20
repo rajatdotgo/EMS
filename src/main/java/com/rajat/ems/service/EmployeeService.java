@@ -24,14 +24,16 @@ public class EmployeeService {
    private final DesignationRepo designationRepo;
    private final EmployeeValidate employeeValidate;
    private final MessageConstant message;
+   private final DesignationValidate designationValidate;
 
     @Autowired
-    public EmployeeService(EmployeeRepo employeeRepo, DesignationRepo designationRepo, EmployeeValidate employeeValidate, MessageConstant message)
+    public EmployeeService(EmployeeRepo employeeRepo, DesignationRepo designationRepo, EmployeeValidate employeeValidate, MessageConstant message, DesignationValidate designationValidate)
     {
         this.employeeRepo = employeeRepo;
         this.designationRepo = designationRepo;
         this.employeeValidate = employeeValidate;
         this.message=message;
+        this.designationValidate=designationValidate;
     }
 
     /** this will return list of all employees in a sorted order **/
@@ -106,23 +108,25 @@ public class EmployeeService {
 
 
             Employee emp = employeeRepo.findByEmployeeId(id);
-            if (emp.getDesignationName().equals("Director")) {
+            if (emp.getDesignationName().equals(this.getHighestPosition().designation.getDesignationName())) {
                 if (!employeeRepo.findAllByParentId(emp.getEmployeeId()).isEmpty()) {                                              // checking if there are any subordinates of the director
                     throw new BadRequestException(message.getMessage("UNABLE_TO_DELETE_DIRECTOR"));
                     //return new ResponseEntity<>(message.getMessage("UNABLE_TO_DELETE_DIRECTOR"), HttpStatus.BAD_REQUEST);    // Not able to delete as there are some subordinates of director are present
                 } else {
 
-                    employeeRepo.delete(emp);
-                    //return new ResponseEntity<>(message.getMessage("DELETED"), HttpStatus.NO_CONTENT);                     //Able to delete as there is no subordinates of director
+                    employeeRepo.delete(emp);                                                               //Able to delete as there is no subordinates of director
                 }
             } else {
-                int parentId = emp.getParentId();
-                this.updateSupervisor(id, parentId);                                                         // updating the supervisor Id of the subordinates of the oldEmployee
-                employeeRepo.delete(emp);
-                //return new ResponseEntity<>(message.getMessage("DELETED"), HttpStatus.NO_CONTENT);
+
+                Integer parentId = emp.getParentId();
+                if(parentId==null){
+                    throw new BadRequestException(message.getMessage("ERROR_DELETING_EMPLOYEE_WITHOUT_PARENT"));
+                }
+                else {
+                    this.updateSupervisor(id, parentId);                                                         // updating the supervisor Id of the subordinates of the oldEmployee
+                    employeeRepo.delete(emp);
+                }
             }
-
-
     }
 
 
@@ -144,9 +148,9 @@ public class EmployeeService {
 
         if (emp.getManagerId() != null) {
 
-            if (employeeRepo.findByEmployeeId(oldId).designation.getDesignationId() == 1)
+            if (employeeRepo.findByEmployeeId(oldId).designation == this.getHighestPosition().designation)
                 throw new BadRequestException(message.getMessage("UPDATING_DIRECTOR"));
-                //return new ResponseEntity<>(message.getMessage("UPDATING_DIRECTOR"), HttpStatus.BAD_REQUEST);                  // badRequest as user is trying to update the supervisor of the director
+                                  // badRequest as user is trying to update the supervisor of the director
             if (StringUtils.isEmpty(emp.getJobTitle())) {
                 if (employeeValidate.parentPossible(employee, emp.getManagerId())) {                                        // checking if the new supervisor is valid or not
                     employee.setParentId(emp.getManagerId());
@@ -166,9 +170,8 @@ public class EmployeeService {
         }
 
         if (!StringUtils.isEmpty(emp.getJobTitle())) {
-            if (employeeRepo.findByEmployeeId(oldId).designation.getDesignationId() == 1 && (!emp.getJobTitle().equals("Director"))) {
-                throw new BadRequestException(message.getMessage("UPDATING_DIRECTOR"));
-               // return new ResponseEntity<>(message.getMessage("UPDATING_DIRECTOR"), HttpStatus.BAD_REQUEST);                  //badRequest user is trying to update jobTitle of director
+            if (employeeRepo.findByEmployeeId(oldId).designation.getDesignationId() == designationValidate.getHighestDesignation().getDesignationId() && (!emp.getJobTitle().equals(designationValidate.getHighestDesignation().getDesignationName()))) {
+                throw new BadRequestException(message.getMessage("UPDATING_DIRECTOR"));                                                        //badRequest user is trying to update jobTitle of director
             }
             if (emp.getManagerId() == null) {
                 if (employeeValidate.designationChange(employee, emp.getJobTitle())) {
@@ -177,7 +180,7 @@ public class EmployeeService {
                 }
                 else
                     throw new BadRequestException(message.getMessage("INVALID_DESIGNATION"));
-                   // return new ResponseEntity<>(message.getMessage("INVALID_DESIGNATION"), HttpStatus.BAD_REQUEST);
+
 
             } else if (employeeValidate.empExist(emp.getManagerId())) {
                 employee.setParentId(emp.getManagerId());
@@ -187,7 +190,7 @@ public class EmployeeService {
 
                 } else
                     throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
-                   // return new ResponseEntity<>(message.getMessage("INVALID_ENTRY"), HttpStatus.BAD_REQUEST);
+
             }
         }
 
@@ -234,7 +237,7 @@ public class EmployeeService {
                 this.updateSupervisor(empId, newEmployee.getEmployeeId());
                 employeeRepo.delete(employeeRepo.findByEmployeeId(empId));
                 return this.findEmployeeById(newEmployee.getEmployeeId());
-                //return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+
             } else throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));             // if the level of supervisor and subordinates is not valid then return badRequest
         } else if (employeeValidate.designationValid(employeeRepo.findByEmployeeId(empId), emp.getJobTitle()) && emp.getManagerId() == null) {        // checking if the designation  entered is valid or not
 
@@ -243,48 +246,57 @@ public class EmployeeService {
             this.updateSupervisor(empId, newEmployee.getEmployeeId());
             employeeRepo.delete(employeeRepo.findByEmployeeId(empId));
             return this.findEmployeeById(newEmployee.getEmployeeId());
-           // return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+
         } else throw new BadRequestException(message.getMessage("INVALID_DESIGNATION"));
     }
 
-    public Employee addEmployee(PostEmployeeRequestEntity employee) {
-        employeeValidate.validateDesignation(employee.getJobTitle());                                                    //entered designation does not exist
-          if (!(employeeValidate.empExist(employee.getManagerId())) && designationRepo.findByDesignationNameLike(employee.getJobTitle()).getDesignationId() != 1) {                           //supervisor null and designation is not director
+    public Employee addEmployee(PostEmployeeRequestEntity employeeToAdd) {
+        employeeValidate.validateDesignation(employeeToAdd.getJobTitle());                                                    //entered designation does not exist
+        Employee highestEmployee = this.getHighestPosition();
+        if (!(employeeValidate.empExist(employeeToAdd.getManagerId())) && designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() != designationValidate.getHighestDesignation().getDesignationId()) {                           //supervisor null and designation is not director
+            System.err.println("first");
             throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
 
         }
         try{
-            employeeValidate.validateName(employee.getName(),true);
+            employeeValidate.validateName(employeeToAdd.getName(),true);
         }
         catch (ValidationError error)
         {
             throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_NAME",error.cause));
         }
-        if (!employeeValidate.empExist(employee.getManagerId())) {           // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employee is director
-            if (employeeRepo.findAll().isEmpty()) {
-                if (designationRepo.findByDesignationNameLike(employee.getJobTitle()).getDesignationId() == 1) {
-                    Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employee.getJobTitle()), employee.getManagerId(), employee.getName());
+        if (!employeeValidate.empExist(employeeToAdd.getManagerId())&& highestEmployee.designation.getLevel()>designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getLevel()) {           // if the supervisor id is null or negative then it will check the number of employees in the organization if the number is zero then it will add only if the employeeToAdd is highest designation
+
+                if (designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()).getDesignationId() == designationValidate.getHighestDesignation().getDesignationId()) {
+                    Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
                     employeeRepo.save(newEmployee);
+                    highestEmployee.setParentId(newEmployee.getEmployeeId());
+                    employeeRepo.save(highestEmployee);
 
                     return newEmployee;
                 } else {
                     throw new BadRequestException(message.getMessage("INVALID_ENTRY"));
                 }
-            } else {
-                throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
-            }
-        } else {
 
-            if (employeeRepo.findByEmployeeId(employee.getManagerId()).designation.getLevel() < designationRepo.findByDesignationNameLike(employee.getJobTitle()).getLevel()) {               // checking if the designation is valid against supervisor or not
-                Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employee.getJobTitle()), employee.getManagerId(), employee.getName());
-                employeeRepo.save(newEmployee);                                                                                                                                  // saving the new employee
+        } else{
+
+            Employee newEmployee = new Employee(designationRepo.findByDesignationNameLike(employeeToAdd.getJobTitle()), employeeToAdd.getManagerId(), employeeToAdd.getName());
+            if(employeeToAdd.getManagerId()!=null&&employeeValidate.isSmallerThanParent(newEmployee,employeeToAdd.getJobTitle()))                                          // checking if the designation is valid against supervisor or not
+            {
+                employeeRepo.save(newEmployee);                                                                                                                                  // saving the new employeeToAdd
                 return newEmployee;
-            } else {
+            }
+
+
+        else {
+
                 throw new BadRequestException(message.getMessage("INVALID_SUPERVISOR"));
             }
 
         }
+    }
 
-
+    public Employee getHighestPosition(){
+        return employeeRepo.findFirstByOrderByDesignation_levelAscEmployeeNameAsc();
     }
 }

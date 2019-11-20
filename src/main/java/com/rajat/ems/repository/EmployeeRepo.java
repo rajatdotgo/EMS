@@ -13,5 +13,7 @@ public interface EmployeeRepo extends JpaRepository <Employee,Integer>{
     public List<Employee> findAllByParentId(int parId);
     public List<Employee> findAllByParentIdOrderByDesignation_levelAscEmployeeNameAsc(int id);
     Employee findByParentId(Integer id);
+    List<Employee> findEmployeeByDesignation_DesignationName(String designationName);
+    Employee findFirstByOrderByDesignation_levelAscEmployeeNameAsc();
 
 }

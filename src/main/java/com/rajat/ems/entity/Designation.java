@@ -33,7 +33,7 @@ public class Designation {
     }
 
     public void setDesignationName(String designationName) {
-        this.designationName = designationName.trim().toUpperCase();
+        this.designationName = designationName;
     }
 
     public float getLevel() {

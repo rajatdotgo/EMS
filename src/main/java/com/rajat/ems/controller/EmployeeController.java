@@ -53,7 +53,7 @@ public class EmployeeController {
             return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
         Map<String, Object> map = employeeService.findEmployeeById(empId);
-        return new ResponseEntity(map,HttpStatus.OK);
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
 
@@ -61,7 +61,7 @@ public class EmployeeController {
     @ApiOperation(value = "Adds a new employee in the organisation")
     public ResponseEntity saveData(@RequestBody PostEmployeeRequestEntity employee) {
         Employee newEmployee = employeeService.addEmployee(employee);
-        return new ResponseEntity(newEmployee,HttpStatus.CREATED);
+        return new ResponseEntity<>(newEmployee,HttpStatus.CREATED);
     }
 
     @PutMapping("/rest/employees/{empId}")
@@ -78,16 +78,9 @@ public class EmployeeController {
             throw new BadRequestException(message.getMessage("VALIDATION_ERROR_INVALID_ID",error.cause));
         }
 
-//        if (empId <= 0) {
-//            return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
-//        }
-//        if (!employeeValidate.empExist(empId)) {
-//            return new ResponseEntity<>(message.getMessage("NO_RECORD_FOUND"), HttpStatus.BAD_REQUEST);
-//        }
+
         employeeValidate.validateBody(emp.getName(),emp.getManagerId(),emp.getJobTitle());
-//        if ((StringUtils.isEmpty(emp.getName())) && (emp.getManagerId() == null) && (StringUtils.isEmpty(emp.getJobTitle()))) {
-//            return new ResponseEntity<>(message.getMessage("INSUFFICIENT_DATA"), HttpStatus.BAD_REQUEST);
-//        }
+
         if (employeeRepo.findByEmployeeId(empId).designation.getDesignationId() == 1 && (!emp.getJobTitle().equals("Director"))&&(!StringUtils.isEmpty(emp.getJobTitle()))) {
             return new ResponseEntity<>("You can not alter the Director", HttpStatus.BAD_REQUEST);
         }
@@ -100,7 +93,7 @@ public class EmployeeController {
         else {
             map = employeeService.employeeUpdate(empId, emp);
         }
-        return new ResponseEntity(map,HttpStatus.OK);
+        return new ResponseEntity<>(map,HttpStatus.OK);
     }
 
     @DeleteMapping("/rest/employees/{employeeId}")
@@ -110,7 +103,7 @@ public class EmployeeController {
             return new ResponseEntity<>(message.getMessage("INVALID_ID"), HttpStatus.BAD_REQUEST);
         }
         employeeService.deleteEmployee(employeeId);
-        return new ResponseEntity(message.getMessage("DELETED"),HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(message.getMessage("DELETED"),HttpStatus.NO_CONTENT);
     }
 
 }
